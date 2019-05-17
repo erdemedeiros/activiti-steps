@@ -21,18 +21,20 @@ import java.util.List;
 
 import org.activiti.api.model.shared.event.RuntimeEvent;
 
-public class HandledEvents {
+public class HandledEvents implements EventsProvider {
 
-    private List<RuntimeEvent> collectedEvents = new ArrayList<RuntimeEvent>();
+    private List<RuntimeEvent<?,?>> collectedEvents = new ArrayList<>();
 
-    public HandledEvents() {
-    }
-
-    public List<RuntimeEvent> getCollectedEvents() {
+    public List<RuntimeEvent<?,?>> getCollectedEvents() {
         return collectedEvents;
     }
 
-    public void addCollectedEvents(RuntimeEvent event) {
+    public void addCollectedEvents(RuntimeEvent<?,?> event) {
         this.collectedEvents.add(event);
+    }
+
+    @Override
+    public List<RuntimeEvent<?, ?>> getEvents() {
+        return collectedEvents;
     }
 }

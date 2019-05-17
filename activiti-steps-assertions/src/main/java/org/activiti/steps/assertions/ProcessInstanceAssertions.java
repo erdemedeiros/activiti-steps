@@ -17,48 +17,36 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.api.process.model.events.ProcessRuntimeEvent;
-import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
-import org.activiti.api.process.runtime.events.ProcessStartedEvent;
 
-import static org.activiti.api.process.model.events.ProcessRuntimeEvent.ProcessEvents.PROCESS_STARTED;
 import static org.assertj.core.api.Assertions.*;
 
 public class ProcessInstanceAssertions {
 
-    private HandledEvents handledEvents;
+    private EventsProvider eventsProvider;
 
     private ProcessInstance processInstance;
 
-    public ProcessInstanceAssertions(HandledEvents handledEvents,
+    public ProcessInstanceAssertions(EventsProvider eventsProvider,
                                      ProcessInstance processInstance) {
-        this.handledEvents = handledEvents;
+        this.eventsProvider = eventsProvider;
         this.processInstance = processInstance;
     }
 
-    public ProcessInstanceAssertions started() {
-        assertThat(handledEvents.getCollectedEvents())
-                .filteredOn(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.equals(event.getEventType()))
-                .extracting(ProcessCreatedEvent.class::cast)
-                .extracting(event -> event.getEntity().getId())
-                .contains(processInstance.getId());
-        assertThat(handledEvents.getCollectedEvents())
-                .filteredOn(event -> PROCESS_STARTED.equals(event.getEventType()))
-                .extracting(ProcessStartedEvent.class::cast)
-                .extracting(event -> event.getEntity().getId())
-                .as("Unable to find related " + PROCESS_STARTED.name()  + " event!")
-                .contains(processInstance.getId());
-
-
+    public ProcessInstanceAssertions hasName(String name) {
+        assertThat(processInstance.getName()).isEqualTo(name);
         return this;
     }
 
-    public ProcessInstanceAssertions wentThrough(FlowElementAssertions ... flowElementAssertions){
-
+    public ProcessInstanceAssertions hasBusinessKey(String businessKey) {
+        assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
         return this;
     }
 
-    public ProcessInstanceAssertions completed(){
+    public ProcessInstanceAssertions expect(ResultMatcher ... resultMatcher) {
+        for (ResultMatcher matcher : resultMatcher) {
+            matcher.match(processInstance,
+                          eventsProvider);
+        }
         return this;
     }
 

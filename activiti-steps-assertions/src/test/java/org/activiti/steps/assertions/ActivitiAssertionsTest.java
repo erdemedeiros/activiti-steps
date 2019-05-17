@@ -27,9 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.activiti.steps.assertions.BPMEndEventAssertions.endEvent;
-import static org.activiti.steps.assertions.BPMStartEventAssertions.startEvent;
-import static org.activiti.steps.assertions.SequenceFlowAssertions.sequenceFlow;
+import static org.activiti.steps.assertions.ProcessInstanceMatchers.processInstance;
+import static org.activiti.steps.assertions.SequenceFlowMatchers.sequenceFlow;
+import static org.activiti.steps.assertions.StartEventMatchers.startEvent;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
@@ -42,7 +42,7 @@ public class ActivitiAssertionsTest {
     private SecurityUtil securityUtil;
 
     @Autowired
-    private ActivitiAssertions activitiAssertions;
+    private ProcessOperations processOperations;
 
     @Before
     public void setUp() {
@@ -51,26 +51,23 @@ public class ActivitiAssertionsTest {
 
     @Test
     public void shouldExecuteGenericProcess() {
-        ProcessInstance processInstance = processRuntime.start(ProcessPayloadBuilder
-                                                                       .start()
-                                                                       .withProcessDefinitionKey("processwit-c6fd1b26-0d64-47f2-8d04-0b70764444a7")
-                                                                       .withBusinessKey("my-business-key")
-                                                                       .withName("my-process-instance-name")
-                                                                       .build());
-        activitiAssertions
-                .assertThat(processInstance)
-                .started()
-                .wentThrough(
-                        startEvent("StartEvent_1")
-                                .started()
-                                .completed(),
-                        sequenceFlow("SequenceFlow_108momn")
-                                .taken(),
-                        endEvent("EndEvent_0lms8y3")
-                                .started()
-                                .completed()
 
-                )
-                .completed();
+        processOperations.start(ProcessPayloadBuilder
+                                        .start()
+                                        .withProcessDefinitionKey("processwit-c6fd1b26-0d64-47f2-8d04-0b70764444a7")
+                                        .withBusinessKey("my-business-key")
+                                        .withName("my-process-instance-name")
+                                        .build())
+                .hasBusinessKey("my-business-key")
+                .hasName("my-process-instance-name")
+                .expect(
+                        processInstance()
+                                .hasBeenStarted(),
+                        startEvent("StartEvent_1")
+                                .hasBeenCompleted(),
+                        sequenceFlow("SequenceFlow_108momn")
+                                .hasBeenTaken()
+                );
+
     }
 }

@@ -23,6 +23,7 @@ import org.activiti.api.process.model.events.BPMNActivityCancelledEvent;
 import org.activiti.api.process.model.events.BPMNActivityCompletedEvent;
 import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
+import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.process.runtime.events.ProcessCancelledEvent;
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
@@ -49,8 +50,8 @@ public class ActivitiAssertionsConfiguration {
     }
 
     @Bean
-    public ActivitiAssertions activitiAssertions(){
-        return new ActivitiAssertions(handledEvents);
+    public ProcessOperations processOperations(ProcessRuntime processRuntime, EventsProvider eventsProvider) {
+        return new ProcessOperations(processRuntime, eventsProvider);
     }
 
     @Bean

@@ -17,17 +17,25 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.payloads.StartProcessPayload;
+import org.activiti.api.process.runtime.ProcessRuntime;
 
-public class ActivitiAssertions {
+public class ProcessOperations {
 
-    private HandledEvents handledEvents;
+    private ProcessRuntime processRuntime;
 
-    public ActivitiAssertions(HandledEvents handledEvents) {
-        this.handledEvents = handledEvents;
+    private EventsProvider eventsProvider;
+
+    public ProcessOperations(ProcessRuntime processRuntime,
+                             EventsProvider eventsProvider) {
+        this.processRuntime = processRuntime;
+        this.eventsProvider = eventsProvider;
     }
 
-    public ProcessInstanceAssertions assertThat(ProcessInstance processInstance) {
-        return new ProcessInstanceAssertions(handledEvents, processInstance);
+    public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
+        ProcessInstance processInstance = processRuntime.start(startProcessPayload);
+        return new ProcessInstanceAssertions(eventsProvider, processInstance);
     }
+
 
 }

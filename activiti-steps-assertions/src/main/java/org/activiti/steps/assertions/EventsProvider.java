@@ -16,25 +16,12 @@
 
 package org.activiti.steps.assertions;
 
-public class BPMEndEventAssertions extends FlowElementAssertions {
+import java.util.List;
 
-    private String definitionKey;
+import org.activiti.api.model.shared.event.RuntimeEvent;
 
-    public BPMEndEventAssertions(String definitionKey) {
+public interface EventsProvider {
 
-        this.definitionKey = definitionKey;
-    }
-
-    public static BPMEndEventAssertions endEvent(String definitionKey) {
-        return new BPMEndEventAssertions(definitionKey);
-    }
-
-    public BPMEndEventAssertions started() {
-        return this;
-    }
-
-    public BPMEndEventAssertions completed() {
-        return this;
-    }
+    List<RuntimeEvent<?,?>> getEvents();
 
 }

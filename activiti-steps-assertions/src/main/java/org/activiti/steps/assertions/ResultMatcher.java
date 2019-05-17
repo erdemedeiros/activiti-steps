@@ -16,25 +16,10 @@
 
 package org.activiti.steps.assertions;
 
-public class BPMStartEventAssertions extends FlowElementAssertions {
+import org.activiti.api.process.model.ProcessInstance;
 
-    private String definitionKey;
+public interface ResultMatcher {
 
-    public BPMStartEventAssertions(String definitionKey) {
-
-        this.definitionKey = definitionKey;
-    }
-
-    public static BPMStartEventAssertions startEvent(String definitionKey) {
-        return new BPMStartEventAssertions(definitionKey);
-    }
-
-    public BPMStartEventAssertions started() {
-        return this;
-    }
-
-    public BPMStartEventAssertions completed() {
-        return this;
-    }
+    void match(ProcessInstance processInstance, EventsProvider eventsProvider);
 
 }

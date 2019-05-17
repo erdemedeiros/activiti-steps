@@ -16,7 +16,7 @@
 
 package org.activiti.steps.assertions;
 
-public class SequenceFlowAssertions extends FlowElementAssertions {
+public class SequenceFlowAssertions {
 
     private String definitionKey;
 
@@ -29,9 +29,8 @@ public class SequenceFlowAssertions extends FlowElementAssertions {
         return new SequenceFlowAssertions(definitionKey);
     }
 
-    public SequenceFlowAssertions taken() {
+    public SequenceFlowAssertions hasBeenTaken() {
         return this;
     }
-
 
 }
