@@ -16,7 +16,6 @@
 
 package org.activiti.steps.assertions;
 
-import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.spring.conformance.util.security.SecurityUtil;
@@ -58,8 +57,6 @@ public class ActivitiAssertionsTest {
                                         .withBusinessKey("my-business-key")
                                         .withName("my-process-instance-name")
                                         .build())
-                .hasBusinessKey("my-business-key")
-                .hasName("my-process-instance-name")
                 .expect(
                         processInstance()
                                 .hasBeenStarted(),
@@ -67,7 +64,8 @@ public class ActivitiAssertionsTest {
                                 .hasBeenCompleted(),
                         sequenceFlow("SequenceFlow_108momn")
                                 .hasBeenTaken()
-                );
-
+                )
+                .hasBusinessKey("my-business-key")
+                .hasName("my-process-instance-name");
     }
 }
