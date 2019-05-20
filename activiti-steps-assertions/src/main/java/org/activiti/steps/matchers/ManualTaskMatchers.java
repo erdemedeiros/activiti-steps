@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions.matchers;
+package org.activiti.steps.matchers;
 
 public class ManualTaskMatchers extends ActivityMatchers {
 

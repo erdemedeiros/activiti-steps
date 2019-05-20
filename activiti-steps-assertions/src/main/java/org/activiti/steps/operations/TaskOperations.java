@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.operations;
 
 import org.activiti.api.task.model.Task;
-import org.activiti.steps.matchers.TaskResultMatcher;
+import org.activiti.api.task.model.payloads.ClaimTaskPayload;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.steps.assertions.EventsProvider;
+import org.activiti.steps.assertions.TaskAssertions;
 
-public class TaskAssertions {
+public class TaskOperations {
 
-    private Task task;
+    private TaskRuntime taskRuntime;
 
     private EventsProvider eventsProvider;
 
-    public TaskAssertions(Task task,
+    public TaskOperations(TaskRuntime taskRuntime,
                           EventsProvider eventsProvider) {
-        this.task = task;
+        this.taskRuntime = taskRuntime;
         this.eventsProvider = eventsProvider;
     }
 
-    public TaskAssertions expect(TaskResultMatcher ... matchers) {
-        for (TaskResultMatcher matcher : matchers) {
-            matcher.match(task, eventsProvider);
-        }
-        return this;
+    public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
+        Task task = taskRuntime.claim(claimTaskPayload);
+        return new TaskAssertions(task, eventsProvider);
     }
-
 }

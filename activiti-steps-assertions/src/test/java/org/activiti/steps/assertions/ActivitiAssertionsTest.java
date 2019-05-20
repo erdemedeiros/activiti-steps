@@ -24,8 +24,8 @@ import org.activiti.api.task.model.Task;
 import org.activiti.api.task.model.builders.TaskPayloadBuilder;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.spring.conformance.util.security.SecurityUtil;
-import org.activiti.steps.assertions.operations.ProcessOperations;
-import org.activiti.steps.assertions.operations.TaskOperations;
+import org.activiti.steps.operations.ProcessOperations;
+import org.activiti.steps.operations.TaskOperations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,13 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.activiti.steps.assertions.matchers.BPMNStartEventMatchers.startEvent;
-import static org.activiti.steps.assertions.matchers.EndEventMatchers.endEvent;
-import static org.activiti.steps.assertions.matchers.ManualTaskMatchers.manualTask;
-import static org.activiti.steps.assertions.matchers.ProcessInstanceMatchers.processInstance;
-import static org.activiti.steps.assertions.matchers.ProcessTaskMatchers.task;
-import static org.activiti.steps.assertions.matchers.SequenceFlowMatchers.sequenceFlow;
-import static org.activiti.steps.assertions.matchers.TaskMatchers.task;
+import static org.activiti.steps.matchers.BPMNStartEventMatchers.startEvent;
+import static org.activiti.steps.matchers.EndEventMatchers.endEvent;
+import static org.activiti.steps.matchers.ManualTaskMatchers.manualTask;
+import static org.activiti.steps.matchers.ProcessInstanceMatchers.processInstance;
+import static org.activiti.steps.matchers.ProcessTaskMatchers.task;
+import static org.activiti.steps.matchers.SequenceFlowMatchers.sequenceFlow;
+import static org.activiti.steps.matchers.TaskMatchers.task;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

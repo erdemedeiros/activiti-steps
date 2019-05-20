@@ -17,7 +17,7 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.steps.assertions.matchers.ProcessResultMatcher;
+import org.activiti.steps.matchers.ProcessResultMatcher;
 
 public class ProcessInstanceAssertions {
 

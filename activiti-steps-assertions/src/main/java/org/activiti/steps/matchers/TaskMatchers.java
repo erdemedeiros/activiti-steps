@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions.matchers;
+package org.activiti.steps.matchers;
 
 import java.util.List;
 import java.util.stream.Collectors;

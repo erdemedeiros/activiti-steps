@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions.matchers;
+package org.activiti.steps.matchers;
 
-public class BPMNStartEventMatchers extends ActivityMatchers {
+import org.activiti.api.task.model.Task;
+import org.activiti.steps.assertions.EventsProvider;
 
-    private static final String START_EVENT = "startEvent";
+public interface TaskResultMatcher {
 
-    private BPMNStartEventMatchers(String definitionKey) {
-        super(definitionKey);
-
-    }
-
-    @Override
-    public String getActivityType() {
-        return START_EVENT;
-    }
-
-    public static BPMNStartEventMatchers startEvent(String definitionKey) {
-        return new BPMNStartEventMatchers(definitionKey);
-    }
-
+    void match(Task task,
+               EventsProvider eventsProvider);
 }

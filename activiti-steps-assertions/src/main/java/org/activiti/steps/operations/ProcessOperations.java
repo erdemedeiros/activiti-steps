@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions.operations;
+package org.activiti.steps.operations;
 
-import org.activiti.api.task.model.Task;
-import org.activiti.api.task.model.payloads.ClaimTaskPayload;
-import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.payloads.StartProcessPayload;
+import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.steps.assertions.EventsProvider;
-import org.activiti.steps.assertions.TaskAssertions;
+import org.activiti.steps.assertions.ProcessInstanceAssertions;
 
-public class TaskOperations {
+public class ProcessOperations {
 
-    private TaskRuntime taskRuntime;
+    private ProcessRuntime processRuntime;
 
     private EventsProvider eventsProvider;
 
-    public TaskOperations(TaskRuntime taskRuntime,
-                          EventsProvider eventsProvider) {
-        this.taskRuntime = taskRuntime;
+    public ProcessOperations(ProcessRuntime processRuntime,
+                             EventsProvider eventsProvider) {
+        this.processRuntime = processRuntime;
         this.eventsProvider = eventsProvider;
     }
 
-    public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
-        Task task = taskRuntime.claim(claimTaskPayload);
-        return new TaskAssertions(task, eventsProvider);
+    public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
+        ProcessInstance processInstance = processRuntime.start(startProcessPayload);
+        return new ProcessInstanceAssertions(eventsProvider, processInstance);
     }
+
+
 }

@@ -40,8 +40,8 @@ import org.activiti.api.task.runtime.events.TaskCreatedEvent;
 import org.activiti.api.task.runtime.events.TaskSuspendedEvent;
 import org.activiti.api.task.runtime.events.TaskUpdatedEvent;
 import org.activiti.api.task.runtime.events.listener.TaskEventListener;
-import org.activiti.steps.assertions.operations.ProcessOperations;
-import org.activiti.steps.assertions.operations.TaskOperations;
+import org.activiti.steps.operations.ProcessOperations;
+import org.activiti.steps.operations.TaskOperations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

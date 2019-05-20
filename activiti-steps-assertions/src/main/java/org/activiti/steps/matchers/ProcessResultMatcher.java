@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions.matchers;
+package org.activiti.steps.matchers;
 
-public class EndEventMatchers extends ActivityMatchers {
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.steps.assertions.EventsProvider;
 
-    private static final String END_EVENT = "endEvent";
+public interface ProcessResultMatcher {
 
-    private EndEventMatchers(String definitionKey) {
-        super(definitionKey);
-
-    }
-
-    @Override
-    public String getActivityType() {
-        return END_EVENT;
-    }
-
-    public static EndEventMatchers endEvent(String definitionKey) {
-        return new EndEventMatchers(definitionKey);
-    }
+    void match(ProcessInstance processInstance, EventsProvider eventsProvider);
 
 }
