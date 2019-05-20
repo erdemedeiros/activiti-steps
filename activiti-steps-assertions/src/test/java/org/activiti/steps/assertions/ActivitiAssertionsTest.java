@@ -131,14 +131,23 @@ public class ActivitiAssertionsTest {
 
         assertThat(tasks.getContent()).hasSize(1);
 
+        Task task = tasks.getContent().get(0);
         taskOperations.claim(TaskPayloadBuilder
                                      .claim()
                                      .withTaskId(
-                                             tasks.getContent().get(0).getId())
+                                             task.getId())
                                      .build())
                 .expect(task()
                                 .hasBeenAssigned(),
                         task()
                                 .hasAssignee(USERNAME));
+
+        taskOperations.complete(TaskPayloadBuilder
+                                        .complete()
+                                        .withTaskId(task.getId())
+                                        .build())
+                .expect(
+                        task().hasBeenCompleted()
+                );
     }
 }

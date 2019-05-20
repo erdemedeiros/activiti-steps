@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.activiti.api.task.model.events.TaskRuntimeEvent;
 import org.activiti.api.task.runtime.events.TaskAssignedEvent;
+import org.activiti.api.task.runtime.events.TaskCompletedEvent;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -44,6 +45,21 @@ public class TaskMatchers {
                     .filteredOn(event -> event.getEntity().getId().equals(task.getId()))
                     .extracting(event -> event.getEntity().getName())
                     .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED + " for task " + task.getId())
+                    .contains(task.getName());
+        };
+    }
+
+    public TaskResultMatcher hasBeenCompleted() {
+        return (task, eventsProvider) -> {
+            List<TaskCompletedEvent> taskCompletedEvents = eventsProvider.getEvents()
+                    .stream()
+                    .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_COMPLETED.equals(event.getEventType()))
+                    .map(TaskCompletedEvent.class::cast)
+                    .collect(Collectors.toList());
+            assertThat(taskCompletedEvents)
+                    .filteredOn(event -> event.getEntity().getId().equals(task.getId()))
+                    .extracting(event -> event.getEntity().getName())
+                    .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_COMPLETED + " for task " + task.getId())
                     .contains(task.getName());
         };
     }

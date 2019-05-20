@@ -18,6 +18,7 @@ package org.activiti.steps.operations;
 
 import org.activiti.api.task.model.Task;
 import org.activiti.api.task.model.payloads.ClaimTaskPayload;
+import org.activiti.api.task.model.payloads.CompleteTaskPayload;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.steps.assertions.EventsProvider;
 import org.activiti.steps.assertions.TaskAssertions;
@@ -36,6 +37,11 @@ public class TaskOperations {
 
     public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
         Task task = taskRuntime.claim(claimTaskPayload);
+        return new TaskAssertions(task, eventsProvider);
+    }
+
+    public TaskAssertions complete(CompleteTaskPayload completeTaskPayload) {
+        Task task = taskRuntime.complete(completeTaskPayload);
         return new TaskAssertions(task, eventsProvider);
     }
 }
