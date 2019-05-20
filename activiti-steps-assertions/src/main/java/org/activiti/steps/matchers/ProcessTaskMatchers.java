@@ -36,16 +36,16 @@ public class ProcessTaskMatchers {
         return new ProcessTaskMatchers(taskName);
     }
 
-    public ProcessResultMatcher hasBeenCreated() {
+    public OperationScopeMatcher hasBeenCreated() {
 
-        return (processInstance, eventProvider) -> {
+        return (operationScope, eventProvider) -> {
             List<TaskCreatedEvent> taskCreatedEvents = eventProvider.getEvents()
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_CREATED.equals(event.getEventType()))
                     .map(TaskCreatedEvent.class::cast)
                     .collect(Collectors.toList());
             assertThat(taskCreatedEvents)
-                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
+                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(operationScope.getProcessInstanceId()))
                     .extracting(event -> event.getEntity().getName())
                     .contains(taskName);
 

@@ -35,16 +35,16 @@ public abstract class ActivityMatchers {
 
     public abstract String getActivityType();
 
-    public ProcessResultMatcher hasBeenCompleted() {
+    public OperationScopeMatcher hasBeenCompleted() {
 
-        return (processInstance, eventProvider) -> {
+        return (operationScope, eventProvider) -> {
             List<BPMNActivityStartedEvent> startedEvents = eventProvider.getEvents()
                     .stream()
                     .filter(event -> BPMNActivityEvent.ActivityEvents.ACTIVITY_STARTED.equals(event.getEventType()))
                     .map(BPMNActivityStartedEvent.class::cast)
                     .collect(Collectors.toList());
             assertThat(startedEvents)
-                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
+                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(operationScope.getProcessInstanceId()))
                     .extracting(event -> event.getEntity().getActivityType(),
                                 event -> event.getEntity().getElementId())
                     .contains(tuple(getActivityType(),
@@ -57,7 +57,7 @@ public abstract class ActivityMatchers {
                     .collect(Collectors.toList());
 
             assertThat(completedEvents)
-                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
+                    .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(operationScope.getProcessInstanceId()))
                     .extracting(event -> event.getEntity().getActivityType(),
                                 event -> event.getEntity().getElementId())
                     .contains(tuple(getActivityType(),

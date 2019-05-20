@@ -34,33 +34,31 @@ public class TaskMatchers {
         return new TaskMatchers();
     }
 
-    public TaskResultMatcher hasBeenAssigned() {
-        return (task, eventsProvider) -> {
+    public OperationScopeMatcher hasBeenAssigned() {
+        return (operationScope, eventsProvider) -> {
             List<TaskAssignedEvent> taskAssignedEvents = eventsProvider.getEvents()
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED.equals(event.getEventType()))
                     .map(TaskAssignedEvent.class::cast)
                     .collect(Collectors.toList());
             assertThat(taskAssignedEvents)
-                    .filteredOn(event -> event.getEntity().getId().equals(task.getId()))
-                    .extracting(event -> event.getEntity().getName())
-                    .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED + " for task " + task.getId())
-                    .contains(task.getName());
+                    .extracting(event -> event.getEntity().getId())
+                    .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED + " for task " + operationScope.getTaskId())
+                    .contains(operationScope.getTaskId());
         };
     }
 
-    public TaskResultMatcher hasBeenCompleted() {
-        return (task, eventsProvider) -> {
+    public OperationScopeMatcher hasBeenCompleted() {
+        return (operationScope, eventsProvider) -> {
             List<TaskCompletedEvent> taskCompletedEvents = eventsProvider.getEvents()
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_COMPLETED.equals(event.getEventType()))
                     .map(TaskCompletedEvent.class::cast)
                     .collect(Collectors.toList());
             assertThat(taskCompletedEvents)
-                    .filteredOn(event -> event.getEntity().getId().equals(task.getId()))
-                    .extracting(event -> event.getEntity().getName())
-                    .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_COMPLETED + " for task " + task.getId())
-                    .contains(task.getName());
+                    .extracting(event -> event.getEntity().getId())
+                    .as("Unable to find event " + TaskRuntimeEvent.TaskEvents.TASK_COMPLETED + " for task " + operationScope.getTaskId())
+                    .contains(operationScope.getTaskId());
         };
     }
 

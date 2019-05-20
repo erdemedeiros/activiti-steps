@@ -41,7 +41,8 @@ public class TaskOperations {
     }
 
     public TaskAssertions complete(CompleteTaskPayload completeTaskPayload) {
-        Task task = taskRuntime.complete(completeTaskPayload);
+        Task task = taskRuntime.task(completeTaskPayload.getTaskId());
+        taskRuntime.complete(completeTaskPayload);
         return new TaskAssertions(task, eventsProvider);
     }
 }

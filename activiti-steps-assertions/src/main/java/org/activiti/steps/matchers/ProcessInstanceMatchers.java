@@ -36,8 +36,8 @@ public class ProcessInstanceMatchers {
         return new ProcessInstanceMatchers();
     }
 
-    public ProcessResultMatcher hasBeenStarted() {
-        return (processInstance, eventsProvider) -> {
+    public OperationScopeMatcher hasBeenStarted() {
+        return (operationScope, eventsProvider) -> {
             List<ProcessCreatedEvent> processCreatedEvents = eventsProvider.getEvents()
                     .stream()
                     .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.equals(event.getEventType()))
@@ -46,7 +46,7 @@ public class ProcessInstanceMatchers {
             assertThat(processCreatedEvents)
                     .extracting(event -> event.getEntity().getId())
                     .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.name() + " event!")
-                    .contains(processInstance.getId());
+                    .contains(operationScope.getProcessInstanceId());
 
             List<ProcessStartedEvent> processStartedEvents = eventsProvider.getEvents()
                     .stream()
@@ -57,12 +57,12 @@ public class ProcessInstanceMatchers {
             assertThat(processStartedEvents)
                     .extracting(event -> event.getEntity().getId())
                     .as("Unable to find related " + PROCESS_STARTED.name() + " event!")
-                    .contains(processInstance.getId());
+                    .contains(operationScope.getProcessInstanceId());
         };
     }
 
-    public ProcessResultMatcher hasBeenCompleted() {
-        return (processInstance, eventsProvider) -> {
+    public OperationScopeMatcher hasBeenCompleted() {
+        return (operationScope, eventsProvider) -> {
             List<ProcessCompletedEvent> processCompletedEvents = eventsProvider.getEvents()
                     .stream()
                     .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.equals(event.getEventType()))
@@ -71,7 +71,7 @@ public class ProcessInstanceMatchers {
             assertThat(processCompletedEvents)
                     .extracting(event -> event.getEntity().getId())
                     .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.name() + " event!")
-                    .contains(processInstance.getId());
+                    .contains(operationScope.getProcessInstanceId());
 
         };
     }

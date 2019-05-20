@@ -77,10 +77,6 @@ public class ActivitiAssertionsTest {
                 .expect(
                         processInstance()
                                 .hasBeenStarted(),
-                        processInstance()
-                                .hasBusinessKey("my-business-key"),
-                        processInstance()
-                                .hasName("my-process-instance-name"),
                         startEvent("StartEvent_1")
                                 .hasBeenCompleted(),
                         sequenceFlow("SequenceFlow_108momn")
@@ -93,6 +89,13 @@ public class ActivitiAssertionsTest {
                                 .hasBeenCompleted(),
                         processInstance()
                                 .hasBeenCompleted()
+
+                )
+                .expect(
+                        processInstance()
+                                .hasBusinessKey("my-business-key"),
+                        processInstance()
+                                .hasName("my-process-instance-name")
 
                 );
     }
@@ -109,10 +112,6 @@ public class ActivitiAssertionsTest {
                 .expect(
                         processInstance()
                                 .hasBeenStarted(),
-                        processInstance()
-                                .hasBusinessKey("my-business-key"),
-                        processInstance()
-                                .hasName("my-process-instance-name"),
                         startEvent("StartEvent_1")
                                 .hasBeenCompleted(),
                         sequenceFlow("SequenceFlow_052072h")
@@ -120,7 +119,12 @@ public class ActivitiAssertionsTest {
                         task("Task Group 1")
                                 .hasBeenCreated()
 
-                ).andReturn();
+                )
+                .expect(processInstance()
+                                .hasBusinessKey("my-business-key"),
+                        processInstance()
+                                .hasName("my-process-instance-name"))
+                .andReturn();
 
         Page<Task> tasks = taskRuntime.tasks(Pageable.of(0,
                                                          MAX_ITEMS),
@@ -138,8 +142,8 @@ public class ActivitiAssertionsTest {
                                              task.getId())
                                      .build())
                 .expect(task()
-                                .hasBeenAssigned(),
-                        task()
+                                .hasBeenAssigned())
+                .expect(task()
                                 .hasAssignee(USERNAME));
 
         taskOperations.complete(TaskPayloadBuilder
@@ -147,7 +151,8 @@ public class ActivitiAssertionsTest {
                                         .withTaskId(task.getId())
                                         .build())
                 .expect(
-                        task().hasBeenCompleted()
+                        task().hasBeenCompleted(),
+                        task("Task Group 2").hasBeenCreated()
                 );
     }
 }

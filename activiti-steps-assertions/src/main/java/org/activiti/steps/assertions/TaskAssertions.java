@@ -17,7 +17,10 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.task.model.Task;
+import org.activiti.steps.matchers.OperationScopeMatcher;
 import org.activiti.steps.matchers.TaskResultMatcher;
+
+import static org.activiti.steps.matchers.OperationScopeImpl.scope;
 
 public class TaskAssertions {
 
@@ -31,11 +34,20 @@ public class TaskAssertions {
         this.eventsProvider = eventsProvider;
     }
 
-    public TaskAssertions expect(TaskResultMatcher ... matchers) {
-        for (TaskResultMatcher matcher : matchers) {
-            matcher.match(task, eventsProvider);
+    public TaskAssertions expect(OperationScopeMatcher... matchers) {
+        for (OperationScopeMatcher matcher : matchers) {
+            matcher.match(scope(task.getProcessInstanceId(),
+                                task.getId()),
+                          eventsProvider);
         }
         return this;
     }
 
+    public TaskAssertions expect(TaskResultMatcher... matchers) {
+        for (TaskResultMatcher matcher : matchers) {
+            matcher.match(task,
+                          eventsProvider);
+        }
+        return this;
+    }
 }

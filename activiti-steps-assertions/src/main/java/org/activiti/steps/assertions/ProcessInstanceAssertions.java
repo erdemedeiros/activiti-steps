@@ -17,7 +17,10 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.steps.matchers.OperationScopeMatcher;
 import org.activiti.steps.matchers.ProcessResultMatcher;
+
+import static org.activiti.steps.matchers.OperationScopeImpl.processInstanceScope;
 
 public class ProcessInstanceAssertions {
 
@@ -34,6 +37,14 @@ public class ProcessInstanceAssertions {
     public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
         for (ProcessResultMatcher matcher : processResultMatcher) {
             matcher.match(processInstance,
+                          eventsProvider);
+        }
+        return this;
+    }
+
+    public ProcessInstanceAssertions expect(OperationScopeMatcher... matchers) {
+        for (OperationScopeMatcher matcher : matchers) {
+            matcher.match(processInstanceScope(processInstance.getId()),
                           eventsProvider);
         }
         return this;
