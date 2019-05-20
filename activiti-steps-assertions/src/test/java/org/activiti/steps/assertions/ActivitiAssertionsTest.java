@@ -38,9 +38,6 @@ import static org.activiti.steps.assertions.matchers.SequenceFlowMatchers.sequen
 public class ActivitiAssertionsTest {
 
     @Autowired
-    private ProcessRuntime processRuntime;
-
-    @Autowired
     private SecurityUtil securityUtil;
 
     @Autowired
