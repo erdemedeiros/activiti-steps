@@ -16,10 +16,16 @@
 
 package org.activiti.steps.assertions;
 
+import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
-import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.api.runtime.shared.query.Page;
+import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.api.task.model.Task;
+import org.activiti.api.task.model.builders.TaskPayloadBuilder;
+import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.spring.conformance.util.security.SecurityUtil;
 import org.activiti.steps.assertions.operations.ProcessOperations;
+import org.activiti.steps.assertions.operations.TaskOperations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,21 +37,32 @@ import static org.activiti.steps.assertions.matchers.BPMNStartEventMatchers.star
 import static org.activiti.steps.assertions.matchers.EndEventMatchers.endEvent;
 import static org.activiti.steps.assertions.matchers.ManualTaskMatchers.manualTask;
 import static org.activiti.steps.assertions.matchers.ProcessInstanceMatchers.processInstance;
+import static org.activiti.steps.assertions.matchers.ProcessTaskMatchers.task;
 import static org.activiti.steps.assertions.matchers.SequenceFlowMatchers.sequenceFlow;
+import static org.activiti.steps.assertions.matchers.TaskMatchers.task;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
 public class ActivitiAssertionsTest {
 
+    private static final int MAX_ITEMS = 100;
+    private static final String USERNAME = "user1";
     @Autowired
     private SecurityUtil securityUtil;
 
     @Autowired
     private ProcessOperations processOperations;
 
+    @Autowired
+    private TaskRuntime taskRuntime;
+
+    @Autowired
+    private TaskOperations taskOperations;
+
     @Before
     public void setUp() {
-        securityUtil.logInAs("user1");
+        securityUtil.logInAs(USERNAME);
     }
 
     @Test
@@ -78,5 +95,50 @@ public class ActivitiAssertionsTest {
                                 .hasBeenCompleted()
 
                 );
+    }
+
+    @Test
+    public void shouldExecuteProcessWithUserTask() {
+
+        ProcessInstance processInstance = processOperations.start(ProcessPayloadBuilder
+                                                                          .start()
+                                                                          .withProcessDefinitionKey("usertaskgr-1a8cdf77-0981-45d4-8080-7cf1a80c973b")
+                                                                          .withBusinessKey("my-business-key")
+                                                                          .withName("my-process-instance-name")
+                                                                          .build())
+                .expect(
+                        processInstance()
+                                .hasBeenStarted(),
+                        processInstance()
+                                .hasBusinessKey("my-business-key"),
+                        processInstance()
+                                .hasName("my-process-instance-name"),
+                        startEvent("StartEvent_1")
+                                .hasBeenCompleted(),
+                        sequenceFlow("SequenceFlow_052072h")
+                                .hasBeenTaken(),
+                        task("Task Group 1")
+                                .hasBeenCreated()
+
+                ).andReturn();
+
+        Page<Task> tasks = taskRuntime.tasks(Pageable.of(0,
+                                                         MAX_ITEMS),
+                                             TaskPayloadBuilder
+                                                     .tasks()
+                                                     .withProcessInstanceId(processInstance.getId())
+                                                     .build());
+
+        assertThat(tasks.getContent()).hasSize(1);
+
+        taskOperations.claim(TaskPayloadBuilder
+                                     .claim()
+                                     .withTaskId(
+                                             tasks.getContent().get(0).getId())
+                                     .build())
+                .expect(task()
+                                .hasBeenAssigned(),
+                        task()
+                                .hasAssignee(USERNAME));
     }
 }

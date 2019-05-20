@@ -17,7 +17,7 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.steps.assertions.matchers.ResultMatcher;
+import org.activiti.steps.assertions.matchers.ProcessResultMatcher;
 
 public class ProcessInstanceAssertions {
 
@@ -31,11 +31,15 @@ public class ProcessInstanceAssertions {
         this.processInstance = processInstance;
     }
 
-    public ProcessInstanceAssertions expect(ResultMatcher... resultMatcher) {
-        for (ResultMatcher matcher : resultMatcher) {
+    public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
+        for (ProcessResultMatcher matcher : processResultMatcher) {
             matcher.match(processInstance,
                           eventsProvider);
         }
         return this;
+    }
+
+    public ProcessInstance andReturn() {
+        return processInstance;
     }
 }

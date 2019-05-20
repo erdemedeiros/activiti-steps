@@ -35,7 +35,7 @@ public abstract class ActivityMatchers {
 
     public abstract String getActivityType();
 
-    public ResultMatcher hasBeenCompleted() {
+    public ProcessResultMatcher hasBeenCompleted() {
 
         return (processInstance, eventProvider) -> {
             List<BPMNActivityStartedEvent> startedEvents = eventProvider.getEvents()

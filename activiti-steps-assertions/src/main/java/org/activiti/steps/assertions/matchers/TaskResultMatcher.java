@@ -16,11 +16,11 @@
 
 package org.activiti.steps.assertions.matchers;
 
-import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.task.model.Task;
 import org.activiti.steps.assertions.EventsProvider;
 
-public interface ResultMatcher {
+public interface TaskResultMatcher {
 
-    void match(ProcessInstance processInstance, EventsProvider eventsProvider);
-
+    void match(Task task,
+               EventsProvider eventsProvider);
 }

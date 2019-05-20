@@ -19,35 +19,37 @@ package org.activiti.steps.assertions.matchers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
-import org.activiti.api.process.model.events.SequenceFlowEvent;
+import org.activiti.api.task.model.events.TaskRuntimeEvent;
+import org.activiti.api.task.runtime.events.TaskAssignedEvent;
+import org.activiti.api.task.runtime.events.TaskCreatedEvent;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class SequenceFlowMatchers {
+public class ProcessTaskMatchers {
 
-    private String definitionKey;
+    private String taskName;
 
-    private SequenceFlowMatchers(String definitionKey) {
-
-        this.definitionKey = definitionKey;
+    private ProcessTaskMatchers(String taskName) {
+        this.taskName = taskName;
     }
 
-    public static SequenceFlowMatchers sequenceFlow(String definitionKey) {
-        return new SequenceFlowMatchers(definitionKey);
+    public static ProcessTaskMatchers task(String taskName) {
+        return new ProcessTaskMatchers(taskName);
     }
 
-    public ProcessResultMatcher hasBeenTaken() {
-        return (processInstance, eventsProvider) -> {
-            List<BPMNSequenceFlowTakenEvent> flowTakenEvents = eventsProvider.getEvents()
+    public ProcessResultMatcher hasBeenCreated() {
+
+        return (processInstance, eventProvider) -> {
+            List<TaskCreatedEvent> taskCreatedEvents = eventProvider.getEvents()
                     .stream()
-                    .filter(event -> SequenceFlowEvent.SequenceFlowEvents.SEQUENCE_FLOW_TAKEN.equals(event.getEventType()))
-                    .map(BPMNSequenceFlowTakenEvent.class::cast)
+                    .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_CREATED.equals(event.getEventType()))
+                    .map(TaskCreatedEvent.class::cast)
                     .collect(Collectors.toList());
-            assertThat(flowTakenEvents)
+            assertThat(taskCreatedEvents)
                     .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
-                    .extracting(event -> event.getEntity().getElementId())
-                    .contains(definitionKey);
+                    .extracting(event -> event.getEntity().getName())
+                    .contains(taskName);
+
         };
     }
 

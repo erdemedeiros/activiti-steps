@@ -36,7 +36,7 @@ public class ProcessInstanceMatchers {
         return new ProcessInstanceMatchers();
     }
 
-    public ResultMatcher hasBeenStarted() {
+    public ProcessResultMatcher hasBeenStarted() {
         return (processInstance, eventsProvider) -> {
             List<ProcessCreatedEvent> processCreatedEvents = eventsProvider.getEvents()
                     .stream()
@@ -61,7 +61,7 @@ public class ProcessInstanceMatchers {
         };
     }
 
-    public ResultMatcher hasBeenCompleted() {
+    public ProcessResultMatcher hasBeenCompleted() {
         return (processInstance, eventsProvider) -> {
             List<ProcessCompletedEvent> processCompletedEvents = eventsProvider.getEvents()
                     .stream()
@@ -77,12 +77,12 @@ public class ProcessInstanceMatchers {
     }
 
 
-    public ResultMatcher hasName(String name) {
+    public ProcessResultMatcher hasName(String name) {
         return (processInstance, eventsProvider) ->
                 assertThat(processInstance.getName()).isEqualTo(name);
     }
 
-    public ResultMatcher hasBusinessKey(String businessKey) {
+    public ProcessResultMatcher hasBusinessKey(String businessKey) {
         return (processInstance, eventsProvider) ->
                 assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
     }

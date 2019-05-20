@@ -16,20 +16,25 @@
 
 package org.activiti.steps.assertions;
 
-public class SequenceFlowAssertions {
+import org.activiti.api.task.model.Task;
+import org.activiti.steps.assertions.matchers.TaskResultMatcher;
 
-    private String definitionKey;
+public class TaskAssertions {
 
-    public SequenceFlowAssertions(String definitionKey) {
+    private Task task;
 
-        this.definitionKey = definitionKey;
+    private EventsProvider eventsProvider;
+
+    public TaskAssertions(Task task,
+                          EventsProvider eventsProvider) {
+        this.task = task;
+        this.eventsProvider = eventsProvider;
     }
 
-    public static SequenceFlowAssertions sequenceFlow(String definitionKey) {
-        return new SequenceFlowAssertions(definitionKey);
-    }
-
-    public SequenceFlowAssertions hasBeenTaken() {
+    public TaskAssertions expect(TaskResultMatcher ... matchers) {
+        for (TaskResultMatcher matcher : matchers) {
+            matcher.match(task, eventsProvider);
+        }
         return this;
     }
 

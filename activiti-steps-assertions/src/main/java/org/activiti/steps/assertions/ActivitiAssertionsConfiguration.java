@@ -33,26 +33,40 @@ import org.activiti.api.process.runtime.events.ProcessSuspendedEvent;
 import org.activiti.api.process.runtime.events.listener.BPMNElementEventListener;
 import org.activiti.api.process.runtime.events.listener.ProcessRuntimeEventListener;
 import org.activiti.api.runtime.shared.events.VariableEventListener;
+import org.activiti.api.task.runtime.TaskRuntime;
+import org.activiti.api.task.runtime.events.TaskAssignedEvent;
+import org.activiti.api.task.runtime.events.TaskCompletedEvent;
+import org.activiti.api.task.runtime.events.TaskCreatedEvent;
+import org.activiti.api.task.runtime.events.TaskSuspendedEvent;
+import org.activiti.api.task.runtime.events.TaskUpdatedEvent;
+import org.activiti.api.task.runtime.events.listener.TaskEventListener;
 import org.activiti.steps.assertions.operations.ProcessOperations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.activiti.steps.assertions.operations.TaskOperations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ActivitiAssertionsConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActivitiAssertionsConfiguration.class);
     private final HandledEvents handledEvents = new HandledEvents();
 
     @Bean
-    public HandledEvents handledEvents(){
+    public HandledEvents handledEvents() {
         return handledEvents;
     }
 
     @Bean
-    public ProcessOperations processOperations(ProcessRuntime processRuntime, EventsProvider eventsProvider) {
-        return new ProcessOperations(processRuntime, eventsProvider);
+    public ProcessOperations processOperations(ProcessRuntime processRuntime,
+                                               EventsProvider eventsProvider) {
+        return new ProcessOperations(processRuntime,
+                                     eventsProvider);
+    }
+
+    @Bean
+    public TaskOperations taskOperations(TaskRuntime taskRuntime,
+                                         EventsProvider eventsProvider) {
+        return new TaskOperations(taskRuntime,
+                                  eventsProvider);
     }
 
     @Bean
@@ -69,7 +83,6 @@ public class ActivitiAssertionsConfiguration {
     public BPMNElementEventListener<BPMNActivityCancelledEvent> bpmnActivityCancelledListener() {
         return handledEvents::addCollectedEvents;
     }
-
 
     @Bean
     public BPMNElementEventListener<BPMNSequenceFlowTakenEvent> bpmnSequenceFlowTakenListener() {
@@ -121,4 +134,28 @@ public class ActivitiAssertionsConfiguration {
         return handledEvents::addCollectedEvents;
     }
 
+    @Bean
+    public TaskEventListener<TaskCreatedEvent> taskCreatedEventListener() {
+        return handledEvents::addCollectedEvents;
+    }
+
+    @Bean
+    public TaskEventListener<TaskUpdatedEvent> taskUpdatedEventListener() {
+        return handledEvents::addCollectedEvents;
+    }
+
+    @Bean
+    public TaskEventListener<TaskCompletedEvent> taskCompletedEventListener() {
+        return handledEvents::addCollectedEvents;
+    }
+
+    @Bean
+    public TaskEventListener<TaskSuspendedEvent> taskSuspendedEventListener() {
+        return handledEvents::addCollectedEvents;
+    }
+
+    @Bean
+    public TaskEventListener<TaskAssignedEvent> taskAssignedEventListener() {
+        return handledEvents::addCollectedEvents;
+    }
 }
