@@ -17,8 +17,7 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
-
-import static org.assertj.core.api.Assertions.*;
+import org.activiti.steps.assertions.matchers.ResultMatcher;
 
 public class ProcessInstanceAssertions {
 
@@ -32,22 +31,11 @@ public class ProcessInstanceAssertions {
         this.processInstance = processInstance;
     }
 
-    public ProcessInstanceAssertions hasName(String name) {
-        assertThat(processInstance.getName()).isEqualTo(name);
-        return this;
-    }
-
-    public ProcessInstanceAssertions hasBusinessKey(String businessKey) {
-        assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
-        return this;
-    }
-
-    public ProcessInstanceAssertions expect(ResultMatcher ... resultMatcher) {
+    public ProcessInstanceAssertions expect(ResultMatcher... resultMatcher) {
         for (ResultMatcher matcher : resultMatcher) {
             matcher.match(processInstance,
                           eventsProvider);
         }
         return this;
     }
-
 }

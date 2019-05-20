@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.assertions.matchers;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.activiti.api.process.model.events.ProcessRuntimeEvent;
+import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
 import org.activiti.api.process.runtime.events.ProcessStartedEvent;
 
@@ -44,6 +45,7 @@ public class ProcessInstanceMatchers {
                     .collect(Collectors.toList());
             assertThat(processCreatedEvents)
                     .extracting(event -> event.getEntity().getId())
+                    .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.name() + " event!")
                     .contains(processInstance.getId());
 
             List<ProcessStartedEvent> processStartedEvents = eventsProvider.getEvents()
@@ -54,10 +56,34 @@ public class ProcessInstanceMatchers {
 
             assertThat(processStartedEvents)
                     .extracting(event -> event.getEntity().getId())
-                    .as("Unable to find related " + PROCESS_STARTED.name()  + " event!")
+                    .as("Unable to find related " + PROCESS_STARTED.name() + " event!")
+                    .contains(processInstance.getId());
+        };
+    }
+
+    public ResultMatcher hasBeenCompleted() {
+        return (processInstance, eventsProvider) -> {
+            List<ProcessCompletedEvent> processCompletedEvents = eventsProvider.getEvents()
+                    .stream()
+                    .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.equals(event.getEventType()))
+                    .map(ProcessCompletedEvent.class::cast)
+                    .collect(Collectors.toList());
+            assertThat(processCompletedEvents)
+                    .extracting(event -> event.getEntity().getId())
+                    .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.name() + " event!")
                     .contains(processInstance.getId());
 
         };
     }
 
+
+    public ResultMatcher hasName(String name) {
+        return (processInstance, eventsProvider) ->
+                assertThat(processInstance.getName()).isEqualTo(name);
+    }
+
+    public ResultMatcher hasBusinessKey(String businessKey) {
+        return (processInstance, eventsProvider) ->
+                assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
+    }
 }

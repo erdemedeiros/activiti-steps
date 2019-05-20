@@ -19,6 +19,7 @@ package org.activiti.steps.assertions;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.spring.conformance.util.security.SecurityUtil;
+import org.activiti.steps.assertions.operations.ProcessOperations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.activiti.steps.assertions.ProcessInstanceMatchers.processInstance;
-import static org.activiti.steps.assertions.SequenceFlowMatchers.sequenceFlow;
-import static org.activiti.steps.assertions.StartEventMatchers.startEvent;
+import static org.activiti.steps.assertions.matchers.BPMNStartEventMatchers.startEvent;
+import static org.activiti.steps.assertions.matchers.EndEventMatchers.endEvent;
+import static org.activiti.steps.assertions.matchers.ManualTaskMatchers.manualTask;
+import static org.activiti.steps.assertions.matchers.ProcessInstanceMatchers.processInstance;
+import static org.activiti.steps.assertions.matchers.SequenceFlowMatchers.sequenceFlow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
@@ -60,12 +63,23 @@ public class ActivitiAssertionsTest {
                 .expect(
                         processInstance()
                                 .hasBeenStarted(),
+                        processInstance()
+                                .hasBusinessKey("my-business-key"),
+                        processInstance()
+                                .hasName("my-process-instance-name"),
                         startEvent("StartEvent_1")
                                 .hasBeenCompleted(),
                         sequenceFlow("SequenceFlow_108momn")
-                                .hasBeenTaken()
-                )
-                .hasBusinessKey("my-business-key")
-                .hasName("my-process-instance-name");
+                                .hasBeenTaken(),
+                        manualTask("Task_1dk1vp6")
+                                .hasBeenCompleted(),
+                        sequenceFlow("SequenceFlow_1lit3dy")
+                                .hasBeenTaken(),
+                        endEvent("EndEvent_0lms8y3")
+                                .hasBeenCompleted(),
+                        processInstance()
+                                .hasBeenCompleted()
+
+                );
     }
 }

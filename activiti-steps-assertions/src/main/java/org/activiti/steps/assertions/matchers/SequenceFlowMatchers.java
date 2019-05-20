@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.assertions.matchers;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.activiti.api.process.model.events.BPMNActivityEvent;
-import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
 import org.activiti.api.process.model.events.SequenceFlowEvent;
 

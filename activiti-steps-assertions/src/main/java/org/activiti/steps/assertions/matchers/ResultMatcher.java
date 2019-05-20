@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.assertions.matchers;
 
-public class ActivitiOperations {
+import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.steps.assertions.EventsProvider;
 
+public interface ResultMatcher {
 
-//    public perform()
+    void match(ProcessInstance processInstance, EventsProvider eventsProvider);
 
 }

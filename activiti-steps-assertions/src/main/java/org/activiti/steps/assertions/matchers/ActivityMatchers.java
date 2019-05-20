@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.assertions.matchers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,18 +25,15 @@ import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class StartEventMatchers {
+public abstract class ActivityMatchers {
 
     private String definitionKey;
 
-    private StartEventMatchers(String definitionKey) {
-
+    protected ActivityMatchers(String definitionKey) {
         this.definitionKey = definitionKey;
     }
 
-    public static StartEventMatchers startEvent(String definitionKey) {
-        return new StartEventMatchers(definitionKey);
-    }
+    public abstract String getActivityType();
 
     public ResultMatcher hasBeenCompleted() {
 
@@ -50,7 +47,7 @@ public class StartEventMatchers {
                     .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
                     .extracting(event -> event.getEntity().getActivityType(),
                                 event -> event.getEntity().getElementId())
-                    .contains(tuple("startEvent",
+                    .contains(tuple(getActivityType(),
                                     definitionKey));
 
             List<BPMNActivityCompletedEvent> completedEvents = eventProvider.getEvents()
@@ -63,8 +60,9 @@ public class StartEventMatchers {
                     .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(processInstance.getId()))
                     .extracting(event -> event.getEntity().getActivityType(),
                                 event -> event.getEntity().getElementId())
-                    .contains(tuple("startEvent",
+                    .contains(tuple(getActivityType(),
                                     definitionKey));
         };
     }
+
 }

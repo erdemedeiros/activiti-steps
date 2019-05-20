@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps.assertions.operations;
 
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
+import org.activiti.steps.assertions.EventsProvider;
+import org.activiti.steps.assertions.ProcessInstanceAssertions;
 
 public class ProcessOperations {
 
