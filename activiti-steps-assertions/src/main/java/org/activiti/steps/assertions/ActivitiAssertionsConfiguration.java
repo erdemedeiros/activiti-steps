@@ -23,6 +23,7 @@ import org.activiti.api.process.model.events.BPMNActivityCancelledEvent;
 import org.activiti.api.process.model.events.BPMNActivityCompletedEvent;
 import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
+import org.activiti.api.process.model.events.BPMNSignalReceivedEvent;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.process.runtime.events.ProcessCancelledEvent;
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
@@ -158,4 +159,10 @@ public class ActivitiAssertionsConfiguration {
     public TaskEventListener<TaskAssignedEvent> taskAssignedEventListener() {
         return handledEvents::addCollectedEvents;
     }
+
+    @Bean
+    public BPMNElementEventListener<BPMNSignalReceivedEvent> bpmnSignalReceivedListener() {
+        return handledEvents::addCollectedEvents;
+    }
+
 }

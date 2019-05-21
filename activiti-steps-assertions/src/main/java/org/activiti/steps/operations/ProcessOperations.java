@@ -17,9 +17,11 @@
 package org.activiti.steps.operations;
 
 import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.api.process.model.payloads.SignalPayload;
 import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.steps.assertions.EventsProvider;
+import org.activiti.steps.assertions.SignalAssertions;
 import org.activiti.steps.assertions.ProcessInstanceAssertions;
 
 public class ProcessOperations {
@@ -37,6 +39,11 @@ public class ProcessOperations {
     public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
         ProcessInstance processInstance = processRuntime.start(startProcessPayload);
         return new ProcessInstanceAssertions(eventsProvider, processInstance);
+    }
+
+    public SignalAssertions signal(SignalPayload signalPayload) {
+        processRuntime.signal(signalPayload);
+        return new SignalAssertions(eventsProvider);
     }
 
 

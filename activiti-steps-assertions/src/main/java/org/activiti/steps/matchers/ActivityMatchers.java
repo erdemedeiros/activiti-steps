@@ -35,10 +35,9 @@ public abstract class ActivityMatchers {
 
     public abstract String getActivityType();
 
-    public OperationScopeMatcher hasBeenCompleted() {
-
-        return (operationScope, eventProvider) -> {
-            List<BPMNActivityStartedEvent> startedEvents = eventProvider.getEvents()
+    public OperationScopeMatcher hasBeenStarted() {
+        return (operationScope, eventsProvider) -> {
+            List<BPMNActivityStartedEvent> startedEvents = eventsProvider.getEvents()
                     .stream()
                     .filter(event -> BPMNActivityEvent.ActivityEvents.ACTIVITY_STARTED.equals(event.getEventType()))
                     .map(BPMNActivityStartedEvent.class::cast)
@@ -49,7 +48,13 @@ public abstract class ActivityMatchers {
                                 event -> event.getEntity().getElementId())
                     .contains(tuple(getActivityType(),
                                     definitionKey));
+        };
+    }
 
+    public OperationScopeMatcher hasBeenCompleted() {
+
+        return (operationScope, eventProvider) -> {
+            hasBeenStarted().match(operationScope, eventProvider);
             List<BPMNActivityCompletedEvent> completedEvents = eventProvider.getEvents()
                     .stream()
                     .filter(event -> BPMNActivityEvent.ActivityEvents.ACTIVITY_COMPLETED.equals(event.getEventType()))
@@ -60,6 +65,7 @@ public abstract class ActivityMatchers {
                     .filteredOn(event -> event.getEntity().getProcessInstanceId().equals(operationScope.getProcessInstanceId()))
                     .extracting(event -> event.getEntity().getActivityType(),
                                 event -> event.getEntity().getElementId())
+                    .as("Unable to find event " + BPMNActivityEvent.ActivityEvents.ACTIVITY_COMPLETED + " for element " + definitionKey)
                     .contains(tuple(getActivityType(),
                                     definitionKey));
         };

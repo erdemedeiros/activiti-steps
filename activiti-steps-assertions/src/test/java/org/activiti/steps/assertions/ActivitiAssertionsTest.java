@@ -35,12 +35,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.activiti.steps.matchers.BPMNStartEventMatchers.startEvent;
 import static org.activiti.steps.matchers.EndEventMatchers.endEvent;
+import static org.activiti.steps.matchers.IntermediateCatchEventMatchers.intermediateCatchEvent;
 import static org.activiti.steps.matchers.ManualTaskMatchers.manualTask;
 import static org.activiti.steps.matchers.ProcessInstanceMatchers.processInstance;
 import static org.activiti.steps.matchers.ProcessTaskMatchers.task;
 import static org.activiti.steps.matchers.ProcessVariableMatchers.processVariable;
 import static org.activiti.steps.matchers.SequenceFlowMatchers.sequenceFlow;
+import static org.activiti.steps.matchers.SignalMatchers.signal;
 import static org.activiti.steps.matchers.TaskMatchers.task;
+import static org.activiti.steps.matchers.ThrowEventMatchers.throwEvent;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -159,6 +162,65 @@ public class ActivitiAssertionsTest {
                 .expect(
                         task().hasBeenCompleted(),
                         task("Task Group 2").hasBeenCreated()
+                );
+    }
+
+    @Test
+    public void shouldExecuteProcessWithIntermediateThrowSignal() {
+        processOperations.start(ProcessPayloadBuilder
+                                        .start()
+                                        .withProcessDefinitionKey("broadcastSignalEventProcess")
+                                        .build())
+                .expect(
+                        processInstance()
+                                .hasBeenStarted(),
+                        startEvent("startevent1")
+                                .hasBeenCompleted(),
+                        sequenceFlow("flow5")
+                                .hasBeenTaken(),
+                        throwEvent("signalintermediatethrowevent1")
+                                .hasBeenCompleted(),
+                        sequenceFlow("flow4")
+                                .hasBeenTaken(),
+                        endEvent("endevent1")
+                                .hasBeenCompleted(),
+                        processInstance()
+                                .hasBeenCompleted()
+                );
+    }
+
+    @Test
+    public void shouldExecuteProcessWithIntermediateCatchSignal() {
+
+        ProcessInstance processInstance = processOperations.start(ProcessPayloadBuilder
+                                                                          .start()
+                                                                          .withProcessDefinitionKey("broadcastSignalCatchEventProcess")
+                                                                          .build())
+                .expect(
+                        processInstance()
+                                .hasBeenStarted(),
+                        startEvent("startevent1")
+                                .hasBeenCompleted(),
+                        sequenceFlow("flow1")
+                                .hasBeenTaken(),
+                        intermediateCatchEvent("signalintermediatecatchevent1")
+                                .hasBeenStarted()
+                ).andReturn();
+
+        assertThat(processInstance.getStatus()).isEqualTo(ProcessInstance.ProcessInstanceStatus.RUNNING);
+
+        processOperations.signal(ProcessPayloadBuilder.signal().withName("Test").build())
+                .expectOn(processInstance,
+                          signal("Test")
+                                  .hasBeenReceived(),
+                          intermediateCatchEvent("signalintermediatecatchevent1")
+                                  .hasBeenCompleted(),
+                          sequenceFlow("flow2")
+                                  .hasBeenTaken(),
+                          endEvent("endevent1")
+                                  .hasBeenCompleted(),
+                          processInstance()
+                                  .hasBeenCompleted()
                 );
     }
 }
