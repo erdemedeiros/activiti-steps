@@ -38,6 +38,7 @@ import static org.activiti.steps.matchers.EndEventMatchers.endEvent;
 import static org.activiti.steps.matchers.ManualTaskMatchers.manualTask;
 import static org.activiti.steps.matchers.ProcessInstanceMatchers.processInstance;
 import static org.activiti.steps.matchers.ProcessTaskMatchers.task;
+import static org.activiti.steps.matchers.ProcessVariableMatchers.processVariable;
 import static org.activiti.steps.matchers.SequenceFlowMatchers.sequenceFlow;
 import static org.activiti.steps.matchers.TaskMatchers.task;
 import static org.assertj.core.api.Assertions.*;
@@ -73,10 +74,15 @@ public class ActivitiAssertionsTest {
                                         .withProcessDefinitionKey("processwit-c6fd1b26-0d64-47f2-8d04-0b70764444a7")
                                         .withBusinessKey("my-business-key")
                                         .withName("my-process-instance-name")
+                                        .withVariable("client",
+                                                      "the best")
                                         .build())
                 .expect(
                         processInstance()
                                 .hasBeenStarted(),
+                        processVariable("client",
+                                        "the best")
+                                .hasBeenCreated(),
                         startEvent("StartEvent_1")
                                 .hasBeenCompleted(),
                         sequenceFlow("SequenceFlow_108momn")
