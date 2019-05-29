@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
 import org.activiti.api.process.model.events.SequenceFlowEvent;
+import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 

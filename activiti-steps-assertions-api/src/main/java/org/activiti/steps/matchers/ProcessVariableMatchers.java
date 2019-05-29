@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.activiti.api.model.shared.event.VariableCreatedEvent;
 import org.activiti.api.model.shared.event.VariableEvent;
+import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 

@@ -16,34 +16,42 @@
 
 package org.activiti.steps.operations;
 
+import java.util.List;
+
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.payloads.SignalPayload;
 import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
-import org.activiti.steps.assertions.EventsProvider;
-import org.activiti.steps.assertions.SignalAssertions;
+import org.activiti.steps.EventProvider;
+import org.activiti.steps.TaskProvider;
 import org.activiti.steps.assertions.ProcessInstanceAssertions;
+import org.activiti.steps.assertions.SignalAssertions;
 
-public class ProcessOperations {
+public class ProcessOperationsImpl implements ProcessOperations {
 
     private ProcessRuntime processRuntime;
 
-    private EventsProvider eventsProvider;
+    private EventProvider eventProvider;
+    private List<TaskProvider> taskProviders;
 
-    public ProcessOperations(ProcessRuntime processRuntime,
-                             EventsProvider eventsProvider) {
+    public ProcessOperationsImpl(ProcessRuntime processRuntime,
+                                 EventProvider eventProvider,
+                                 List<TaskProvider> taskProviders) {
         this.processRuntime = processRuntime;
-        this.eventsProvider = eventsProvider;
+        this.eventProvider = eventProvider;
+        this.taskProviders = taskProviders;
     }
 
+    @Override
     public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
         ProcessInstance processInstance = processRuntime.start(startProcessPayload);
-        return new ProcessInstanceAssertions(eventsProvider, processInstance);
+        return new ProcessInstanceAssertions(eventProvider, taskProviders, processInstance);
     }
 
+    @Override
     public SignalAssertions signal(SignalPayload signalPayload) {
         processRuntime.signal(signalPayload);
-        return new SignalAssertions(eventsProvider);
+        return new SignalAssertions(eventProvider);
     }
 
 

@@ -24,18 +24,10 @@
     <version>7.1.0-SNAPSHOT</version>
     <relativePath>../activiti-steps-dependencies</relativePath>
   </parent>
-  <artifactId>activiti-steps-assertions</artifactId>
-  <name>Activiti Steps :: Assertions</name>
+  <artifactId>activiti-steps-assertions-api</artifactId>
+  <name>Activiti Steps :: Assertions API</name>
 
   <dependencies>
-    <dependency>
-      <groupId>org.activiti.steps</groupId>
-      <artifactId>activiti-steps-assertions-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-spring-conformance-util</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.activiti.api</groupId>
       <artifactId>activiti-api-process-runtime</artifactId>
@@ -61,34 +53,8 @@
       <artifactId>activiti-api-model-shared</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-engine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.activiti</groupId>
-      <artifactId>activiti-spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

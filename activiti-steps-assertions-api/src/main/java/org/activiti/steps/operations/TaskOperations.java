@@ -20,29 +20,31 @@ import org.activiti.api.task.model.Task;
 import org.activiti.api.task.model.payloads.ClaimTaskPayload;
 import org.activiti.api.task.model.payloads.CompleteTaskPayload;
 import org.activiti.api.task.runtime.TaskRuntime;
-import org.activiti.steps.assertions.EventsProvider;
+import org.activiti.steps.EventProvider;
 import org.activiti.steps.assertions.TaskAssertions;
 
 public class TaskOperations {
 
     private TaskRuntime taskRuntime;
 
-    private EventsProvider eventsProvider;
+    private EventProvider eventProvider;
 
     public TaskOperations(TaskRuntime taskRuntime,
-                          EventsProvider eventsProvider) {
+                          EventProvider eventProvider) {
         this.taskRuntime = taskRuntime;
-        this.eventsProvider = eventsProvider;
+        this.eventProvider = eventProvider;
     }
 
     public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
         Task task = taskRuntime.claim(claimTaskPayload);
-        return new TaskAssertions(task, eventsProvider);
+        return new TaskAssertions(task,
+                                  eventProvider);
     }
 
     public TaskAssertions complete(CompleteTaskPayload completeTaskPayload) {
         Task task = taskRuntime.task(completeTaskPayload.getTaskId());
         taskRuntime.complete(completeTaskPayload);
-        return new TaskAssertions(task, eventsProvider);
+        return new TaskAssertions(task,
+                                  eventProvider);
     }
 }

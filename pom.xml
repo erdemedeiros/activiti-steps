@@ -33,6 +33,7 @@
   
   <modules>
     <module>activiti-steps-dependencies</module>
+    <module>activiti-steps-assertions-api</module>
     <module>activiti-steps-assertions</module>
   </modules>
 

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.matchers;
+package org.activiti.steps.operations;
 
-import org.activiti.api.task.model.Task;
-import org.activiti.steps.assertions.EventsProvider;
+import org.activiti.api.process.model.payloads.SignalPayload;
+import org.activiti.api.process.model.payloads.StartProcessPayload;
+import org.activiti.steps.assertions.ProcessInstanceAssertions;
+import org.activiti.steps.assertions.SignalAssertions;
 
-public interface TaskResultMatcher {
+public interface ProcessOperations {
 
-    void match(Task task,
-               EventsProvider eventsProvider);
+    ProcessInstanceAssertions start(StartProcessPayload startProcessPayload);
+
+    SignalAssertions signal(SignalPayload signalPayload);
 }

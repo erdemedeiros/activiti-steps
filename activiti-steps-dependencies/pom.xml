@@ -28,8 +28,16 @@
   <name>Activiti Stesps :: Dependencies BOM (Bill Of Materials)</name>
   <dependencyManagement>
     <dependencies>
-
-
+      <dependency>
+        <groupId>org.activiti.steps</groupId>
+        <artifactId>activiti-steps-assertions-api</artifactId>
+        <version>${activiti-steps.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.activiti.steps</groupId>
+        <artifactId>activiti-steps-assertions</artifactId>
+        <version>${activiti-steps.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

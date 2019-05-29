@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.matchers;
+package org.activiti.steps;
 
-import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.steps.assertions.EventsProvider;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface ProcessResultMatcher {
+import org.activiti.api.model.shared.event.RuntimeEvent;
 
-    void match(ProcessInstance processInstance, EventsProvider eventsProvider);
+public class HandledEvents implements EventProvider {
+
+    private List<RuntimeEvent<?,?>> collectedEvents = new ArrayList<>();
+
+    public List<RuntimeEvent<?,?>> getCollectedEvents() {
+        return collectedEvents;
+    }
+
+    public void addCollectedEvents(RuntimeEvent<?,?> event) {
+        this.collectedEvents.add(event);
+    }
+
+    @Override
+    public List<RuntimeEvent<?, ?>> getEvents() {
+        return collectedEvents;
+    }
 
 }

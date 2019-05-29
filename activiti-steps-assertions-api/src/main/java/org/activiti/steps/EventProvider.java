@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
+package org.activiti.steps;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.api.model.shared.event.RuntimeEvent;
 
-public class HandledEvents implements EventsProvider {
+public interface EventProvider {
 
-    private List<RuntimeEvent<?,?>> collectedEvents = new ArrayList<>();
+    List<RuntimeEvent<?,?>> getEvents();
 
-    public List<RuntimeEvent<?,?>> getCollectedEvents() {
-        return collectedEvents;
-    }
-
-    public void addCollectedEvents(RuntimeEvent<?,?> event) {
-        this.collectedEvents.add(event);
-    }
-
-    @Override
-    public List<RuntimeEvent<?, ?>> getEvents() {
-        return collectedEvents;
-    }
 }

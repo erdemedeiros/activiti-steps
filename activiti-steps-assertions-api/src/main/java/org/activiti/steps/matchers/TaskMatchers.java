@@ -19,9 +19,11 @@ package org.activiti.steps.matchers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.task.model.events.TaskRuntimeEvent;
 import org.activiti.api.task.runtime.events.TaskAssignedEvent;
 import org.activiti.api.task.runtime.events.TaskCompletedEvent;
+import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 

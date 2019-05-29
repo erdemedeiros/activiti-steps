@@ -23,6 +23,8 @@ import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
 import org.activiti.api.process.runtime.events.ProcessStartedEvent;
+import org.activiti.api.task.model.Task;
+import org.activiti.steps.TaskProvider;
 
 import static org.activiti.api.process.model.events.ProcessRuntimeEvent.ProcessEvents.PROCESS_STARTED;
 import static org.assertj.core.api.Assertions.*;
@@ -72,10 +74,8 @@ public class ProcessInstanceMatchers {
                     .extracting(event -> event.getEntity().getId())
                     .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.name() + " event!")
                     .contains(operationScope.getProcessInstanceId());
-
         };
     }
-
 
     public ProcessResultMatcher hasName(String name) {
         return (processInstance, eventsProvider) ->
@@ -85,5 +85,18 @@ public class ProcessInstanceMatchers {
     public ProcessResultMatcher hasBusinessKey(String businessKey) {
         return (processInstance, eventsProvider) ->
                 assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
+    }
+
+    public ProcessTaskMatcher hasTask(String taskName) {
+        return (processInstanceId, taskProviders) -> {
+            for (TaskProvider provider : taskProviders) {
+                List<Task> tasks = provider.getTasks(processInstanceId);
+                assertThat(tasks)
+                        .extracting(Task::getName,
+                                    Task::getStatus)
+                        .contains(tuple(taskName,
+                                        Task.TaskStatus.CREATED));
+            }
+        };
     }
 }

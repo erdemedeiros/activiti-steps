@@ -17,40 +17,26 @@
 package org.activiti.steps.assertions;
 
 import org.activiti.api.process.model.ProcessInstance;
+import org.activiti.steps.EventProvider;
 import org.activiti.steps.matchers.OperationScopeMatcher;
-import org.activiti.steps.matchers.ProcessResultMatcher;
 
 import static org.activiti.steps.matchers.OperationScopeImpl.processInstanceScope;
 
-public class ProcessInstanceAssertions {
+public class SignalAssertions {
 
-    private EventsProvider eventsProvider;
+    private EventProvider eventProvider;
 
-    private ProcessInstance processInstance;
+    public SignalAssertions(EventProvider eventProvider) {
 
-    public ProcessInstanceAssertions(EventsProvider eventsProvider,
-                                     ProcessInstance processInstance) {
-        this.eventsProvider = eventsProvider;
-        this.processInstance = processInstance;
+        this.eventProvider = eventProvider;
     }
 
-    public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
-        for (ProcessResultMatcher matcher : processResultMatcher) {
-            matcher.match(processInstance,
-                          eventsProvider);
-        }
-        return this;
-    }
-
-    public ProcessInstanceAssertions expect(OperationScopeMatcher... matchers) {
+    public SignalAssertions expectOn(ProcessInstance processInstance,
+                                     OperationScopeMatcher... matchers) {
         for (OperationScopeMatcher matcher : matchers) {
             matcher.match(processInstanceScope(processInstance.getId()),
-                          eventsProvider);
+                          eventProvider);
         }
         return this;
-    }
-
-    public ProcessInstance andReturn() {
-        return processInstance;
     }
 }

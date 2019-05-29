@@ -16,10 +16,12 @@
 
 package org.activiti.steps.matchers;
 
-import org.activiti.steps.assertions.EventsProvider;
+import java.util.List;
 
-public interface OperationScopeMatcher {
+import org.activiti.steps.TaskProvider;
 
-    void match(OperationScope operationScope, EventsProvider eventsProvider);
+public interface ProcessTaskMatcher {
+
+    void match(String processInstanceId, List<TaskProvider> taskProviders);
 
 }

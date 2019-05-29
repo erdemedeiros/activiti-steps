@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.activiti.steps.assertions;
-
-import java.util.List;
+package org.activiti.steps.matchers;
 
 import org.activiti.api.model.shared.event.RuntimeEvent;
+import org.activiti.steps.EventProvider;
 
-public interface EventsProvider {
+public interface OperationScopeMatcher {
 
-    List<RuntimeEvent<?,?>> getEvents();
+    void match(OperationScope operationScope, EventProvider eventProvider);
 
 }
