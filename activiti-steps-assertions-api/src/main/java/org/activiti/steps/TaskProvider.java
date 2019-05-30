@@ -24,4 +24,6 @@ public interface TaskProvider {
 
     List<Task> getTasks(String processInstanceId);
 
+    boolean canHandle(Task.TaskStatus taskStatus);
+
 }

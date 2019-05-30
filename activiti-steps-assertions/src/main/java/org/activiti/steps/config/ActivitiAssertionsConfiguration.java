@@ -79,9 +79,11 @@ public class ActivitiAssertionsConfiguration {
 
     @Bean
     public TaskOperations taskOperations(TaskRuntime taskRuntime,
-                                         EventProvider eventProvider) {
+                                         EventProvider eventProvider,
+                                         List<TaskProvider> taskProviders) {
         return new TaskOperations(taskRuntime,
-                                  eventProvider);
+                                  eventProvider,
+                                  taskProviders);
     }
 
     @Bean

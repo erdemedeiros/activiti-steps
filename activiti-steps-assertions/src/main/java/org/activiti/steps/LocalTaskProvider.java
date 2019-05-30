@@ -40,4 +40,15 @@ public class LocalTaskProvider implements TaskProvider {
                                              TaskPayloadBuilder.tasks().withProcessInstanceId(processInstanceId).build());
         return taskPage.getContent();
     }
+
+    @Override
+    public boolean canHandle(Task.TaskStatus taskStatus) {
+        switch (taskStatus) {
+            case CREATED:
+            case ASSIGNED:
+            case SUSPENDED:
+                return true;
+        }
+        return false;
+    }
 }

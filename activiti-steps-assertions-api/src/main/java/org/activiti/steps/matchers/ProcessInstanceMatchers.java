@@ -87,15 +87,17 @@ public class ProcessInstanceMatchers {
                 assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
     }
 
-    public ProcessTaskMatcher hasTask(String taskName) {
+    public ProcessTaskMatcher hasTask(String taskName, Task.TaskStatus taskStatus) {
         return (processInstanceId, taskProviders) -> {
             for (TaskProvider provider : taskProviders) {
-                List<Task> tasks = provider.getTasks(processInstanceId);
-                assertThat(tasks)
-                        .extracting(Task::getName,
-                                    Task::getStatus)
-                        .contains(tuple(taskName,
-                                        Task.TaskStatus.CREATED));
+                if (provider.canHandle(taskStatus)) {
+                    List<Task> tasks = provider.getTasks(processInstanceId);
+                    assertThat(tasks)
+                            .extracting(Task::getName,
+                                        Task::getStatus)
+                            .contains(tuple(taskName,
+                                            taskStatus));
+                }
             }
         };
     }
