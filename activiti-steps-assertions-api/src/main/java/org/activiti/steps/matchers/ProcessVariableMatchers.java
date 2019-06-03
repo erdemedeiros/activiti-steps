@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import org.activiti.api.model.shared.event.VariableCreatedEvent;
 import org.activiti.api.model.shared.event.VariableEvent;
-import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -42,8 +41,8 @@ public class ProcessVariableMatchers {
     }
 
     public OperationScopeMatcher hasBeenCreated() {
-        return (operationScope, eventsProvider) -> {
-            List<VariableCreatedEvent> variableCreatedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<VariableCreatedEvent> variableCreatedEvents = events
                     .stream()
                     .filter(event -> VariableEvent.VariableEvents.VARIABLE_CREATED.equals(event.getEventType()))
                     .map(VariableCreatedEvent.class::cast)

@@ -18,6 +18,7 @@ package org.activiti.steps.assertions;
 
 import java.util.List;
 
+import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.task.model.Task;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.TaskProvider;
@@ -35,7 +36,6 @@ public class TaskAssertions {
 
     private List<TaskProvider> taskProviders;
 
-
     public TaskAssertions(Task task,
                           List<TaskProvider> taskProviders,
                           EventProvider eventProvider) {
@@ -45,10 +45,11 @@ public class TaskAssertions {
     }
 
     public TaskAssertions expect(OperationScopeMatcher... matchers) {
+        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
         for (OperationScopeMatcher matcher : matchers) {
             matcher.match(scope(task.getProcessInstanceId(),
                                 task.getId()),
-                          eventProvider);
+                          events);
         }
         return this;
     }
@@ -69,7 +70,7 @@ public class TaskAssertions {
         return this;
     }
 
-    public Task andReturn(){
+    public Task andReturn() {
         return task;
     }
 }

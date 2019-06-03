@@ -19,11 +19,9 @@ package org.activiti.steps.matchers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.task.model.events.TaskRuntimeEvent;
 import org.activiti.api.task.runtime.events.TaskAssignedEvent;
 import org.activiti.api.task.runtime.events.TaskCompletedEvent;
-import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -37,8 +35,8 @@ public class TaskMatchers {
     }
 
     public OperationScopeMatcher hasBeenAssigned() {
-        return (operationScope, eventsProvider) -> {
-            List<TaskAssignedEvent> taskAssignedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<TaskAssignedEvent> taskAssignedEvents = events
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_ASSIGNED.equals(event.getEventType()))
                     .map(TaskAssignedEvent.class::cast)
@@ -51,8 +49,8 @@ public class TaskMatchers {
     }
 
     public OperationScopeMatcher hasBeenCompleted() {
-        return (operationScope, eventsProvider) -> {
-            List<TaskCompletedEvent> taskCompletedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<TaskCompletedEvent> taskCompletedEvents = events
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_COMPLETED.equals(event.getEventType()))
                     .map(TaskCompletedEvent.class::cast)

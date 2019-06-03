@@ -16,11 +16,13 @@
 
 package org.activiti.steps.matchers;
 
+import java.util.List;
+
 import org.activiti.api.model.shared.event.RuntimeEvent;
-import org.activiti.steps.EventProvider;
 
 public interface OperationScopeMatcher {
 
-    void match(OperationScope operationScope, EventProvider eventProvider);
+    void match(OperationScope operationScope,
+               List<RuntimeEvent<?, ?>> events);
 
 }

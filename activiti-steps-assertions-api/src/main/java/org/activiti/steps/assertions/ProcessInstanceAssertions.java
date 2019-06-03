@@ -18,6 +18,7 @@ package org.activiti.steps.assertions;
 
 import java.util.List;
 
+import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.TaskProvider;
@@ -43,17 +44,19 @@ public class ProcessInstanceAssertions {
     }
 
     public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
+        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
         for (ProcessResultMatcher matcher : processResultMatcher) {
             matcher.match(processInstance,
-                          eventProvider);
+                          events);
         }
         return this;
     }
 
     public ProcessInstanceAssertions expect(OperationScopeMatcher... matchers) {
+        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
         for (OperationScopeMatcher matcher : matchers) {
             matcher.match(processInstanceScope(processInstance.getId()),
-                          eventProvider);
+                          events);
         }
         return this;
     }

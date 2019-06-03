@@ -36,8 +36,8 @@ public abstract class ActivityMatchers {
     public abstract String getActivityType();
 
     public OperationScopeMatcher hasBeenStarted() {
-        return (operationScope, eventsProvider) -> {
-            List<BPMNActivityStartedEvent> startedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<BPMNActivityStartedEvent> startedEvents = events
                     .stream()
                     .filter(event -> BPMNActivityEvent.ActivityEvents.ACTIVITY_STARTED.equals(event.getEventType()))
                     .map(BPMNActivityStartedEvent.class::cast)
@@ -53,10 +53,10 @@ public abstract class ActivityMatchers {
 
     public OperationScopeMatcher hasBeenCompleted() {
 
-        return (operationScope, eventProvider) -> {
+        return (operationScope, events) -> {
             hasBeenStarted().match(operationScope,
-                                   eventProvider);
-            List<BPMNActivityCompletedEvent> completedEvents = eventProvider.getEvents()
+                                   events);
+            List<BPMNActivityCompletedEvent> completedEvents = events
                     .stream()
                     .filter(event -> BPMNActivityEvent.ActivityEvents.ACTIVITY_COMPLETED.equals(event.getEventType()))
                     .map(BPMNActivityCompletedEvent.class::cast)

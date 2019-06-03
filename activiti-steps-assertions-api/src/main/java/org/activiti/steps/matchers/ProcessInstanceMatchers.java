@@ -39,8 +39,8 @@ public class ProcessInstanceMatchers {
     }
 
     public OperationScopeMatcher hasBeenStarted() {
-        return (operationScope, eventsProvider) -> {
-            List<ProcessCreatedEvent> processCreatedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<ProcessCreatedEvent> processCreatedEvents = events
                     .stream()
                     .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.equals(event.getEventType()))
                     .map(ProcessCreatedEvent.class::cast)
@@ -50,7 +50,7 @@ public class ProcessInstanceMatchers {
                     .as("Unable to find related " + ProcessRuntimeEvent.ProcessEvents.PROCESS_CREATED.name() + " event!")
                     .contains(operationScope.getProcessInstanceId());
 
-            List<ProcessStartedEvent> processStartedEvents = eventsProvider.getEvents()
+            List<ProcessStartedEvent> processStartedEvents = events
                     .stream()
                     .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_STARTED.equals(event.getEventType()))
                     .map(ProcessStartedEvent.class::cast)
@@ -64,8 +64,8 @@ public class ProcessInstanceMatchers {
     }
 
     public OperationScopeMatcher hasBeenCompleted() {
-        return (operationScope, eventsProvider) -> {
-            List<ProcessCompletedEvent> processCompletedEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<ProcessCompletedEvent> processCompletedEvents = events
                     .stream()
                     .filter(event -> ProcessRuntimeEvent.ProcessEvents.PROCESS_COMPLETED.equals(event.getEventType()))
                     .map(ProcessCompletedEvent.class::cast)
@@ -78,12 +78,12 @@ public class ProcessInstanceMatchers {
     }
 
     public ProcessResultMatcher hasName(String name) {
-        return (processInstance, eventsProvider) ->
+        return (processInstance, events) ->
                 assertThat(processInstance.getName()).isEqualTo(name);
     }
 
     public ProcessResultMatcher hasBusinessKey(String businessKey) {
-        return (processInstance, eventsProvider) ->
+        return (processInstance, events) ->
                 assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
     }
 

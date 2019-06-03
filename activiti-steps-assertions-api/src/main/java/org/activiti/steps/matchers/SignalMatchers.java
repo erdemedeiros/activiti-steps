@@ -38,8 +38,8 @@ public class SignalMatchers {
     }
 
     public OperationScopeMatcher hasBeenReceived() {
-        return (operationScope, eventsProvider) -> {
-            List<BPMNSignalReceivedEvent> flowTakenEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<BPMNSignalReceivedEvent> flowTakenEvents = events
                     .stream()
                     .filter(event -> BPMNSignalEvent.SignalEvents.SIGNAL_RECEIVED.equals(event.getEventType()))
                     .map(BPMNSignalReceivedEvent.class::cast)

@@ -16,11 +16,13 @@
 
 package org.activiti.steps.matchers;
 
+import java.util.List;
+
+import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.steps.EventProvider;
 
 public interface ProcessResultMatcher {
 
-    void match(ProcessInstance processInstance, EventProvider eventProvider);
+    void match(ProcessInstance processInstance, List<RuntimeEvent<?, ?>> events);
 
 }

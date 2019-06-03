@@ -38,8 +38,8 @@ public class ProcessTaskMatchers {
 
     public OperationScopeMatcher hasBeenCreated() {
 
-        return (operationScope, eventProvider) -> {
-            List<TaskCreatedEvent> taskCreatedEvents = eventProvider.getEvents()
+        return (operationScope, events) -> {
+            List<TaskCreatedEvent> taskCreatedEvents = events
                     .stream()
                     .filter(event -> TaskRuntimeEvent.TaskEvents.TASK_CREATED.equals(event.getEventType()))
                     .map(TaskCreatedEvent.class::cast)

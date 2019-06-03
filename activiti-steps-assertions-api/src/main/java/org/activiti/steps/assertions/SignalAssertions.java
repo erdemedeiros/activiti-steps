@@ -16,6 +16,9 @@
 
 package org.activiti.steps.assertions;
 
+import java.util.List;
+
+import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.matchers.OperationScopeMatcher;
@@ -33,9 +36,10 @@ public class SignalAssertions {
 
     public SignalAssertions expectOn(ProcessInstance processInstance,
                                      OperationScopeMatcher... matchers) {
+        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
         for (OperationScopeMatcher matcher : matchers) {
             matcher.match(processInstanceScope(processInstance.getId()),
-                          eventProvider);
+                          events);
         }
         return this;
     }

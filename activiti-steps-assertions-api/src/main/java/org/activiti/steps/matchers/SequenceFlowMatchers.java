@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
 import org.activiti.api.process.model.events.SequenceFlowEvent;
-import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -39,8 +38,8 @@ public class SequenceFlowMatchers {
     }
 
     public OperationScopeMatcher hasBeenTaken() {
-        return (operationScope, eventsProvider) -> {
-            List<BPMNSequenceFlowTakenEvent> flowTakenEvents = eventsProvider.getEvents()
+        return (operationScope, events) -> {
+            List<BPMNSequenceFlowTakenEvent> flowTakenEvents = events
                     .stream()
                     .filter(event -> SequenceFlowEvent.SequenceFlowEvents.SEQUENCE_FLOW_TAKEN.equals(event.getEventType()))
                     .map(BPMNSequenceFlowTakenEvent.class::cast)
