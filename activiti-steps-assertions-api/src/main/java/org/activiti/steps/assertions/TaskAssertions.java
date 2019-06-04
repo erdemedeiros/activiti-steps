@@ -16,60 +16,18 @@
 
 package org.activiti.steps.assertions;
 
-import java.util.List;
-
-import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.task.model.Task;
-import org.activiti.steps.EventProvider;
-import org.activiti.steps.TaskProvider;
 import org.activiti.steps.matchers.OperationScopeMatcher;
 import org.activiti.steps.matchers.ProcessTaskMatcher;
 import org.activiti.steps.matchers.TaskResultMatcher;
 
-import static org.activiti.steps.matchers.OperationScopeImpl.scope;
+public interface TaskAssertions {
 
-public class TaskAssertions {
+    TaskAssertions expect(OperationScopeMatcher... matchers);
 
-    private Task task;
+    TaskAssertions expect(TaskResultMatcher... matchers);
 
-    private EventProvider eventProvider;
+    TaskAssertions expect(ProcessTaskMatcher... matchers);
 
-    private List<TaskProvider> taskProviders;
-
-    public TaskAssertions(Task task,
-                          List<TaskProvider> taskProviders,
-                          EventProvider eventProvider) {
-        this.task = task;
-        this.taskProviders = taskProviders;
-        this.eventProvider = eventProvider;
-    }
-
-    public TaskAssertions expect(OperationScopeMatcher... matchers) {
-        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
-        for (OperationScopeMatcher matcher : matchers) {
-            matcher.match(scope(task.getProcessInstanceId(),
-                                task.getId()),
-                          events);
-        }
-        return this;
-    }
-
-    public TaskAssertions expect(TaskResultMatcher... matchers) {
-        for (TaskResultMatcher matcher : matchers) {
-            matcher.match(task);
-        }
-        return this;
-    }
-
-    public TaskAssertions expect(ProcessTaskMatcher... matchers) {
-        for (ProcessTaskMatcher matcher : matchers) {
-            matcher.match(task.getProcessInstanceId(),
-                          taskProviders);
-        }
-        return this;
-    }
-
-    public Task andReturn() {
-        return task;
-    }
+    Task andReturn();
 }

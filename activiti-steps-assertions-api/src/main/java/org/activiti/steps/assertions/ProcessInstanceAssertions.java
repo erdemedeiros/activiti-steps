@@ -16,59 +16,18 @@
 
 package org.activiti.steps.assertions;
 
-import java.util.List;
-
-import org.activiti.api.model.shared.event.RuntimeEvent;
 import org.activiti.api.process.model.ProcessInstance;
-import org.activiti.steps.EventProvider;
-import org.activiti.steps.TaskProvider;
 import org.activiti.steps.matchers.OperationScopeMatcher;
 import org.activiti.steps.matchers.ProcessResultMatcher;
 import org.activiti.steps.matchers.ProcessTaskMatcher;
 
-import static org.activiti.steps.matchers.OperationScopeImpl.processInstanceScope;
+public interface ProcessInstanceAssertions {
 
-public class ProcessInstanceAssertions {
+    ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher);
 
-    private EventProvider eventProvider;
+    ProcessInstanceAssertions expect(OperationScopeMatcher... matchers);
 
-    private List<TaskProvider> taskProviders;
-    private ProcessInstance processInstance;
+    ProcessInstanceAssertions expect(ProcessTaskMatcher... matchers);
 
-    public ProcessInstanceAssertions(EventProvider eventProvider,
-                                     List<TaskProvider> taskProviders,
-                                     ProcessInstance processInstance) {
-        this.eventProvider = eventProvider;
-        this.taskProviders = taskProviders;
-        this.processInstance = processInstance;
-    }
-
-    public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
-        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
-        for (ProcessResultMatcher matcher : processResultMatcher) {
-            matcher.match(processInstance);
-        }
-        return this;
-    }
-
-    public ProcessInstanceAssertions expect(OperationScopeMatcher... matchers) {
-        List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
-        for (OperationScopeMatcher matcher : matchers) {
-            matcher.match(processInstanceScope(processInstance.getId()),
-                          events);
-        }
-        return this;
-    }
-
-    public ProcessInstanceAssertions expect(ProcessTaskMatcher... matchers) {
-        for (ProcessTaskMatcher matcher : matchers) {
-            matcher.match(processInstance.getId(),
-                          taskProviders);
-        }
-        return this;
-    }
-
-    public ProcessInstance andReturn() {
-        return processInstance;
-    }
+    ProcessInstance andReturn();
 }

@@ -24,7 +24,9 @@ import org.activiti.api.task.model.payloads.CompleteTaskPayload;
 import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.TaskProvider;
+import org.activiti.steps.assertions.AwaitTaskAssertions;
 import org.activiti.steps.assertions.TaskAssertions;
+import org.activiti.steps.assertions.TaskAssertionsImpl;
 
 public class TaskOperationsImpl implements TaskOperations {
 
@@ -33,30 +35,38 @@ public class TaskOperationsImpl implements TaskOperations {
     private EventProvider eventProvider;
 
     private List<TaskProvider> taskProviders;
-
+    private boolean awaitEnabled;
 
     public TaskOperationsImpl(TaskRuntime taskRuntime,
                               EventProvider eventProvider,
-                              List<TaskProvider> taskProviders) {
+                              List<TaskProvider> taskProviders,
+                              boolean awaitEnabled) {
         this.taskRuntime = taskRuntime;
         this.eventProvider = eventProvider;
         this.taskProviders = taskProviders;
+        this.awaitEnabled = awaitEnabled;
     }
 
     @Override
     public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
         Task task = taskRuntime.claim(claimTaskPayload);
-        return new TaskAssertions(task,
-                                  taskProviders,
-                                  eventProvider);
+        return buildTaskAssertions(task);
+    }
+
+    private TaskAssertions buildTaskAssertions(Task task) {
+        TaskAssertions taskAssertions = new TaskAssertionsImpl(task,
+                                                                   taskProviders,
+                                                                   eventProvider);
+        if (awaitEnabled) {
+            taskAssertions = new AwaitTaskAssertions(taskAssertions);
+        }
+        return taskAssertions;
     }
 
     @Override
     public TaskAssertions complete(CompleteTaskPayload completeTaskPayload) {
         Task task = taskRuntime.task(completeTaskPayload.getTaskId());
         taskRuntime.complete(completeTaskPayload);
-        return new TaskAssertions(task,
-                                  taskProviders,
-                                  eventProvider);
+        return buildTaskAssertions(task);
     }
 }

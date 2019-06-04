@@ -24,7 +24,9 @@ import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.TaskProvider;
+import org.activiti.steps.assertions.AwaitProcessInstanceAssertions;
 import org.activiti.steps.assertions.ProcessInstanceAssertions;
+import org.activiti.steps.assertions.ProcessInstanceAssertionsImpl;
 import org.activiti.steps.assertions.SignalAssertions;
 
 public class ProcessOperationsImpl implements ProcessOperations {
@@ -33,19 +35,28 @@ public class ProcessOperationsImpl implements ProcessOperations {
 
     private EventProvider eventProvider;
     private List<TaskProvider> taskProviders;
+    private boolean awaitEnabled;
 
     public ProcessOperationsImpl(ProcessRuntime processRuntime,
                                  EventProvider eventProvider,
-                                 List<TaskProvider> taskProviders) {
+                                 List<TaskProvider> taskProviders,
+                                 boolean awaitEnabled) {
         this.processRuntime = processRuntime;
         this.eventProvider = eventProvider;
         this.taskProviders = taskProviders;
+        this.awaitEnabled = awaitEnabled;
     }
 
     @Override
     public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
         ProcessInstance processInstance = processRuntime.start(startProcessPayload);
-        return new ProcessInstanceAssertions(eventProvider, taskProviders, processInstance);
+        ProcessInstanceAssertions processInstanceAssertions = new ProcessInstanceAssertionsImpl(eventProvider,
+                                                                                                    taskProviders,
+                                                                                                    processInstance);
+        if (awaitEnabled){
+            processInstanceAssertions = new AwaitProcessInstanceAssertions(processInstanceAssertions);
+        }
+        return processInstanceAssertions;
     }
 
     @Override

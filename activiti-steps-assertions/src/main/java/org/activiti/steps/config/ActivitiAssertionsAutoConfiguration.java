@@ -16,8 +16,6 @@
 
 package org.activiti.steps.config;
 
-import java.util.List;
-
 import org.activiti.api.model.shared.event.VariableCreatedEvent;
 import org.activiti.api.model.shared.event.VariableDeletedEvent;
 import org.activiti.api.model.shared.event.VariableUpdatedEvent;
@@ -26,7 +24,6 @@ import org.activiti.api.process.model.events.BPMNActivityCompletedEvent;
 import org.activiti.api.process.model.events.BPMNActivityStartedEvent;
 import org.activiti.api.process.model.events.BPMNSequenceFlowTakenEvent;
 import org.activiti.api.process.model.events.BPMNSignalReceivedEvent;
-import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.process.runtime.events.ProcessCancelledEvent;
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
@@ -43,14 +40,9 @@ import org.activiti.api.task.runtime.events.TaskCreatedEvent;
 import org.activiti.api.task.runtime.events.TaskSuspendedEvent;
 import org.activiti.api.task.runtime.events.TaskUpdatedEvent;
 import org.activiti.api.task.runtime.events.listener.TaskEventListener;
-import org.activiti.steps.EventProvider;
 import org.activiti.steps.LocalEventProvider;
 import org.activiti.steps.LocalTaskProvider;
 import org.activiti.steps.TaskProvider;
-import org.activiti.steps.operations.ProcessOperations;
-import org.activiti.steps.operations.ProcessOperationsImpl;
-import org.activiti.steps.operations.TaskOperations;
-import org.activiti.steps.operations.TaskOperationsImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -67,24 +59,6 @@ public class ActivitiAssertionsAutoConfiguration {
     @Bean
     public TaskProvider localTaskProvider(TaskRuntime taskRuntime) {
         return new LocalTaskProvider(taskRuntime);
-    }
-
-    @Bean
-    public ProcessOperations processOperations(ProcessRuntime processRuntime,
-                                               EventProvider eventProvider,
-                                               List<TaskProvider> taskProviders) {
-        return new ProcessOperationsImpl(processRuntime,
-                                         eventProvider,
-                                         taskProviders);
-    }
-
-    @Bean
-    public TaskOperations taskOperations(TaskRuntime taskRuntime,
-                                         EventProvider eventProvider,
-                                         List<TaskProvider> taskProviders) {
-        return new TaskOperationsImpl(taskRuntime,
-                                      eventProvider,
-                                      taskProviders);
     }
 
     @Bean
