@@ -17,10 +17,8 @@
 package org.activiti.steps.matchers;
 
 import org.activiti.api.task.model.Task;
-import org.activiti.steps.EventProvider;
 
 public interface TaskResultMatcher {
 
-    void match(Task task,
-               EventProvider eventProvider);
+    void match(Task task);
 }

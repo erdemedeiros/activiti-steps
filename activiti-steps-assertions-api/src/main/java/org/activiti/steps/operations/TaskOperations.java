@@ -16,45 +16,13 @@
 
 package org.activiti.steps.operations;
 
-import java.util.List;
-
-import org.activiti.api.task.model.Task;
 import org.activiti.api.task.model.payloads.ClaimTaskPayload;
 import org.activiti.api.task.model.payloads.CompleteTaskPayload;
-import org.activiti.api.task.runtime.TaskRuntime;
-import org.activiti.steps.EventProvider;
-import org.activiti.steps.TaskProvider;
 import org.activiti.steps.assertions.TaskAssertions;
 
-public class TaskOperations {
+public interface TaskOperations {
 
-    private TaskRuntime taskRuntime;
+    TaskAssertions claim(ClaimTaskPayload claimTaskPayload);
 
-    private EventProvider eventProvider;
-
-    private List<TaskProvider> taskProviders;
-
-
-    public TaskOperations(TaskRuntime taskRuntime,
-                          EventProvider eventProvider,
-                          List<TaskProvider> taskProviders) {
-        this.taskRuntime = taskRuntime;
-        this.eventProvider = eventProvider;
-        this.taskProviders = taskProviders;
-    }
-
-    public TaskAssertions claim(ClaimTaskPayload claimTaskPayload) {
-        Task task = taskRuntime.claim(claimTaskPayload);
-        return new TaskAssertions(task,
-                                  taskProviders,
-                                  eventProvider);
-    }
-
-    public TaskAssertions complete(CompleteTaskPayload completeTaskPayload) {
-        Task task = taskRuntime.task(completeTaskPayload.getTaskId());
-        taskRuntime.complete(completeTaskPayload);
-        return new TaskAssertions(task,
-                                  taskProviders,
-                                  eventProvider);
-    }
+    TaskAssertions complete(CompleteTaskPayload completeTaskPayload);
 }

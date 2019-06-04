@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.activiti.api.model.shared.event.RuntimeEvent;
 
-public class HandledEvents implements EventProvider {
+public class LocalEventProvider implements EventProvider {
 
     private List<RuntimeEvent<?,?>> collectedEvents = new ArrayList<>();
 

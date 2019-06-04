@@ -46,8 +46,7 @@ public class ProcessInstanceAssertions {
     public ProcessInstanceAssertions expect(ProcessResultMatcher... processResultMatcher) {
         List<RuntimeEvent<?, ?>> events = eventProvider.getEvents();
         for (ProcessResultMatcher matcher : processResultMatcher) {
-            matcher.match(processInstance,
-                          events);
+            matcher.match(processInstance);
         }
         return this;
     }

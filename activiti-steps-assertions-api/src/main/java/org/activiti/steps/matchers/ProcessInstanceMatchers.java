@@ -19,6 +19,7 @@ package org.activiti.steps.matchers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.events.ProcessRuntimeEvent;
 import org.activiti.api.process.runtime.events.ProcessCompletedEvent;
 import org.activiti.api.process.runtime.events.ProcessCreatedEvent;
@@ -77,17 +78,23 @@ public class ProcessInstanceMatchers {
         };
     }
 
+    public ProcessResultMatcher hasStatus(ProcessInstance.ProcessInstanceStatus status){
+        return (processInstance) -> assertThat(processInstance.getStatus()).isEqualTo(status);
+    }
+
     public ProcessResultMatcher hasName(String name) {
-        return (processInstance, events) ->
+        return (processInstance) ->
                 assertThat(processInstance.getName()).isEqualTo(name);
     }
 
     public ProcessResultMatcher hasBusinessKey(String businessKey) {
-        return (processInstance, events) ->
+        return (processInstance) ->
                 assertThat(processInstance.getBusinessKey()).isEqualTo(businessKey);
     }
 
-    public ProcessTaskMatcher hasTask(String taskName, Task.TaskStatus taskStatus) {
+    public ProcessTaskMatcher hasTask(String taskName,
+                                      Task.TaskStatus taskStatus,
+                                      TaskResultMatcher ... taskResultMatchers) {
         return (processInstanceId, taskProviders) -> {
             for (TaskProvider provider : taskProviders) {
                 if (provider.canHandle(taskStatus)) {
@@ -97,6 +104,15 @@ public class ProcessInstanceMatchers {
                                         Task::getStatus)
                             .contains(tuple(taskName,
                                             taskStatus));
+                    Task matchingTask = tasks.stream()
+                            .filter(task -> task.getName().equals(taskName))
+                            .findFirst()
+                            .orElse(null);
+                    if (taskResultMatchers != null) {
+                        for (TaskResultMatcher taskResultMatcher : taskResultMatchers) {
+                            taskResultMatcher.match(matchingTask);
+                        }
+                    }
                 }
             }
         };

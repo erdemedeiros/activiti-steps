@@ -56,8 +56,7 @@ public class TaskAssertions {
 
     public TaskAssertions expect(TaskResultMatcher... matchers) {
         for (TaskResultMatcher matcher : matchers) {
-            matcher.match(task,
-                          eventProvider);
+            matcher.match(task);
         }
         return this;
     }

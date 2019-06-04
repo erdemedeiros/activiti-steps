@@ -63,6 +63,10 @@ public class TaskMatchers {
     }
 
     public TaskResultMatcher hasAssignee(String assignee) {
-        return (task, eventsProvider) -> assertThat(task.getAssignee()).isEqualTo(assignee);
+        return withAssignee(assignee);
+    }
+
+    public static TaskResultMatcher withAssignee(String assignee) {
+        return task -> assertThat(task.getAssignee()).isEqualTo(assignee);
     }
 }
