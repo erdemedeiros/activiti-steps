@@ -19,8 +19,21 @@ package org.activiti.steps.assertions;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.steps.matchers.OperationScopeMatcher;
 
-public interface SignalAssertions {
+import static org.awaitility.Awaitility.await;
 
-    SignalAssertions expectOn(ProcessInstance processInstance,
-                              OperationScopeMatcher... matchers);
+public class AwaitSignalAssertions implements SignalAssertions {
+
+    private SignalAssertions signalAssertions;
+
+    public AwaitSignalAssertions(SignalAssertions signalAssertions) {
+        this.signalAssertions = signalAssertions;
+    }
+
+    @Override
+    public SignalAssertions expectOn(ProcessInstance processInstance,
+                                     OperationScopeMatcher... matchers) {
+        await().untilAsserted(() -> signalAssertions.expectOn(processInstance,
+                                                              matchers));
+        return this;
+    }
 }

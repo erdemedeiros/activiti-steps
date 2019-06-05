@@ -16,16 +16,10 @@
 
 package org.activiti.steps.conf;
 
-import java.util.List;
-
-import org.activiti.api.process.runtime.ProcessRuntime;
-import org.activiti.api.task.runtime.TaskRuntime;
-import org.activiti.steps.EventProvider;
-import org.activiti.steps.TaskProvider;
+import org.activiti.steps.operations.AwaitableProcessOperations;
+import org.activiti.steps.operations.AwaitableTaskOperations;
 import org.activiti.steps.operations.ProcessOperations;
-import org.activiti.steps.operations.ProcessOperationsImpl;
 import org.activiti.steps.operations.TaskOperations;
-import org.activiti.steps.operations.TaskOperationsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,25 +28,17 @@ import org.springframework.context.annotation.Configuration;
 public class AssertionsAPIAutoConfiguration {
 
     @Bean
-    public ProcessOperations processOperations(ProcessRuntime processRuntime,
-                                               EventProvider eventProvider,
-                                               List<TaskProvider> taskProviders,
+    public ProcessOperations processOperations(ProcessOperations processRuntimeOperations,
                                                @Value("${activiti.assertions.await.enabled:false}") boolean awaitEnabled) {
-        return new ProcessOperationsImpl(processRuntime,
-                                         eventProvider,
-                                         taskProviders,
-                                         awaitEnabled);
+        return new AwaitableProcessOperations(processRuntimeOperations,
+                                              awaitEnabled);
     }
 
     @Bean
-    public TaskOperations taskOperations(TaskRuntime taskRuntime,
-                                         EventProvider eventProvider,
-                                         List<TaskProvider> taskProviders,
+    public TaskOperations taskOperations(TaskOperations taskRuntimeOperations,
                                          @Value("${activiti.assertions.await.enabled:false}") boolean awaitEnabled) {
-        return new TaskOperationsImpl(taskRuntime,
-                                      eventProvider,
-                                      taskProviders,
-                                      awaitEnabled);
+        return new AwaitableTaskOperations(
+                taskRuntimeOperations,
+                awaitEnabled);
     }
-
 }

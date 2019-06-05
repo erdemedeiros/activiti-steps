@@ -24,45 +24,37 @@ import org.activiti.api.process.model.payloads.StartProcessPayload;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.steps.EventProvider;
 import org.activiti.steps.TaskProvider;
-import org.activiti.steps.assertions.AwaitProcessInstanceAssertions;
 import org.activiti.steps.assertions.ProcessInstanceAssertions;
 import org.activiti.steps.assertions.ProcessInstanceAssertionsImpl;
 import org.activiti.steps.assertions.SignalAssertions;
+import org.activiti.steps.assertions.SignalAssertionsImpl;
 
-public class ProcessOperationsImpl implements ProcessOperations {
+public class ProcessRuntimeOperations implements ProcessOperations {
 
     private ProcessRuntime processRuntime;
-
     private EventProvider eventProvider;
     private List<TaskProvider> taskProviders;
-    private boolean awaitEnabled;
 
-    public ProcessOperationsImpl(ProcessRuntime processRuntime,
-                                 EventProvider eventProvider,
-                                 List<TaskProvider> taskProviders,
-                                 boolean awaitEnabled) {
+    public ProcessRuntimeOperations(ProcessRuntime processRuntime,
+                                    EventProvider eventProvider,
+                                    List<TaskProvider> taskProviders) {
         this.processRuntime = processRuntime;
         this.eventProvider = eventProvider;
         this.taskProviders = taskProviders;
-        this.awaitEnabled = awaitEnabled;
     }
 
     @Override
     public ProcessInstanceAssertions start(StartProcessPayload startProcessPayload)  {
         ProcessInstance processInstance = processRuntime.start(startProcessPayload);
-        ProcessInstanceAssertions processInstanceAssertions = new ProcessInstanceAssertionsImpl(eventProvider,
-                                                                                                    taskProviders,
-                                                                                                    processInstance);
-        if (awaitEnabled){
-            processInstanceAssertions = new AwaitProcessInstanceAssertions(processInstanceAssertions);
-        }
-        return processInstanceAssertions;
+        return new ProcessInstanceAssertionsImpl(eventProvider,
+                                                 taskProviders,
+                                                 processInstance);
     }
 
     @Override
     public SignalAssertions signal(SignalPayload signalPayload) {
         processRuntime.signal(signalPayload);
-        return new SignalAssertions(eventProvider);
+        return new SignalAssertionsImpl(eventProvider);
     }
 
 
